@@ -5,7 +5,8 @@ class Root extends Component {
   constructor() {
     super()
     this.state = {
-      input: ''
+      input: '',
+      fullcontactResults: {}
     }
   }
   // componentDidMount() {
@@ -24,7 +25,23 @@ class Root extends Component {
     .then(results => results.json())
     .then((data) => {
       console.log(data)
+      this.setState({fullcontactResults: data})
     })
+  }
+
+  conditionalRender() {
+    if (this.state.fullcontactResults.city) {
+      const {city} = this.state.fullcontactResults
+      return (
+        <section>
+          <h4>{city}</h4>
+        </section>
+      )
+    } else {
+      return (
+        <div></div>
+      )
+    }
   }
 
   render() {
@@ -33,6 +50,7 @@ class Root extends Component {
         <h1>Unavee</h1>
         <input onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email or Twitter handle"/>
         <button onClick={() => {this.getPlace()}}>Enter</button>
+        {this.conditionalRender()}
       </div>
     )
   }

@@ -1,13 +1,14 @@
 const request = require('request')
 // const API_KEY = // API KEY GOES HERE
-const BASE_URL = `https://api.fullcontact.com/v2/address/locationNormalizer.json?place=denver`
+// const BASE_URL = `https://api.fullcontact.com/v2/address/locationNormalizer.json?place=denver`
 
 function email(req, res, next) {
   request({
-    url: BASE_URL,
+    url: `https://api.fullcontact.com/v2/address/locationNormalizer.json?place=${req.body.place}`,
     headers: {"X-FullContact-APIKey":"7bf3d484dff1e414"}
   },
     function (error, response, body) {
+
     if(!error && response.statusCode === 200) {
       res.send(body)
     } else {

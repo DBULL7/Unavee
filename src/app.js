@@ -29,7 +29,7 @@ app.use('/assets', express.static(path.join(__dirname, '../app/assets')));
 
 app.get('/', function (req, res) { res.sendFile(path.join(__dirname, '/../index.html')) });
 
-app.use('/api', router);
+app.use('/api/v1/user', router);
 app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '/../index.html')) });
 
 app.listen(port);

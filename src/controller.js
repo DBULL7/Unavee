@@ -3,8 +3,9 @@ const request = require('request')
 // const BASE_URL = `https://api.fullcontact.com/v2/address/locationNormalizer.json?place=denver`
 
 function email(req, res, next) {
+  console.log(req.body);
   request({
-    url: `https://api.fullcontact.com/v2/address/locationNormalizer.json?place=${req.body.place}`,
+    url: `https://api.fullcontact.com/v2/person.json?email=${req.body.email}`,
     headers: {"X-FullContact-APIKey":"7bf3d484dff1e414"}
   },
     function (error, response, body) {

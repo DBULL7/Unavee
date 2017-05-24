@@ -14,19 +14,19 @@ class Root extends Component {
   // }
 
   getPlace() {
-    fetch(`/api/v1/user?email=${this.state.input}`, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        // email: 'dbull@live.com'
-        place: this.state.input
-      })
-    })
-    .then(results => results.json())
-    .then((data) => {
-      console.log(data)
-      this.setState({fullcontactResults: data})
-    })
+    // fetch(`/api/v1/user?email=${this.state.input}`, {
+    //   method: "POST",
+    //   headers: {"Content-Type": "application/json"},
+    //   body: JSON.stringify({
+    //     // email: 'dbull@live.com'
+    //     email: this.state.input
+    //   })
+    // })
+    // .then(results => results.json())
+    // .then((data) => {
+    //   console.log(data)
+    //   this.setState({fullcontactResults: data})
+    // })
   }
 
   conditionalRender() {

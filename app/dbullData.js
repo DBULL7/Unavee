@@ -1,4 +1,4 @@
-{
+export default {
   "status": 200,
   "requestId": "a97a086e-6bce-435e-b96f-024eeeef109f",
   "likelihood": 0.95,

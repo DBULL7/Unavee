@@ -11,13 +11,29 @@ class Root extends Component {
   }
   // componentDidMount() {
   //   // INSERT API CALL TO YOUR INTERNAL API
+
+  //
   // }
+
+  getTweets(twitterID) {
+    fetch('api/v1/tweets', {
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({id: twitterID})
+    })
+    .then(results => results.json())
+    .then((data) => {
+      console.log(data)
+      this.setState({lookedUpTweets: data})
+    })
+  }
 
   getPlace() {
     const {contactInfo, demographics, socialProfiles, organizations, photos} = fakeData
     let twitterUrl = socialProfiles.forEach(account => {
       if (account.type === 'twitter') {
         console.log(account.url)
+        this.getTweets(account.id)
         this.setState({twitter: account.url})
       } else if (account.type === 'linkedin') {
         this.setState({LinkedIn: account.url})

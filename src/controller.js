@@ -1,6 +1,6 @@
+const token = require('./twitterKey.js')
 const request = require('request')
-// const API_KEY = // API KEY GOES HERE
-// const BASE_URL = `https://api.fullcontact.com/v2/address/locationNormalizer.json?place=denver`
+
 
 function email(req, res, next) {
   console.log(req.body);
@@ -21,8 +21,29 @@ function email(req, res, next) {
 
 }
 
+
+function tweets(req, res, next) {
+  console.log(req.body);
+ request({
+   url: `https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=${req.body.id}&count=2&include_rts=false`,
+   headers: {
+     "Authorization": `Bearer ${token.token}`
+   }
+ },
+ function( error, response, body) {
+   if(!error && response.statusCode === 200) {
+     res.send(body)
+   } else {
+     console.log(error);
+   }
+ }
+  )
+}
+
+
 module.exports = {
-  email: email
+  email: email,
+  tweets: tweets
 }
 
 // request({

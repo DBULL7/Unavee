@@ -3,5 +3,5 @@ var router = express.Router();
 var controller = require('./controller');
 
 router.post('/user?:email', controller.email)
-
+router.post('/tweets', controller.tweets)
 module.exports = router;

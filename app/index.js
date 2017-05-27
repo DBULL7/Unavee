@@ -7,13 +7,38 @@ class Root extends Component {
     super()
     this.state = {
       input: '',
+      scrubbedTweets: { "contentItems": []}
     }
   }
   // componentDidMount() {
   //   // INSERT API CALL TO YOUR INTERNAL API
-
+  //
   //
   // }
+
+  getPersonalityProfle() {
+    fetch('api/v1/watson', {
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({text: this.state.scrubbedTweets})
+    }).then(results => results.json())
+    .then((data) => {
+      console.log(data)
+    })
+  }
+
+  scrubTweets(data) {
+    console.log(data);
+    data.forEach((tweet) => {
+      this.state.scrubbedTweets.contentItems.push({
+        "content": tweet.text,
+        "contenttype": "text/plain",
+        "id": tweet.id,
+        "language": "en"
+      })
+    })
+    console.log(this.state.scrubbedTweets.contentItems);
+  }
 
   getTweets(twitterID) {
     fetch('api/v1/tweets', {
@@ -24,6 +49,7 @@ class Root extends Component {
     .then(results => results.json())
     .then((data) => {
       console.log(data)
+      this.scrubTweets(data)
       this.setState({lookedUpTweets: data})
     })
   }
@@ -95,6 +121,7 @@ class Root extends Component {
         <h1>Unavee</h1>
         <input onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email or Twitter handle"/>
         <button onClick={() => {this.getPlace()}}>Enter</button>
+        <button onClick={() => {this.getPersonalityProfle()}}>Watson</button>
         {this.conditionalRender()}
       </div>
     )

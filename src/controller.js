@@ -1,6 +1,7 @@
 const token = require('./twitterKey.js')
 const request = require('request')
 const watsonKeys = require('./watsonKeys.js')
+const sendgridKey = require('./sendgridAPIKey.js')
 var PersonalityInsightsV3 = require('watson-developer-cloud/personality-insights/v3')
 
 
@@ -45,55 +46,66 @@ function tweets(req, res, next) {
 
 function watson(req, res, next) {
   // console.log(req.body)
-  var personality_insights = new PersonalityInsightsV3({
-    username: watsonKeys.username,
-    password: watsonKeys.password,
-    version_date: '2017-05-20'
-  })
+    var personality_insights = new PersonalityInsightsV3({
+      username: watsonKeys.username,
+      password: watsonKeys.password,
+      version_date: '2017-05-20'
+    })
 
-  var params = {
-  // Get the content items from the JSON file.
-  content_items: req.body.text.contentItems,
-  consumption_preferences: true,
-  raw_scores: true,
-  headers: {
-    'accept-language': 'en',
-    'accept': 'application/json'
-  }
-};
+    var params = {
+    // Get the content items from the JSON file.
+    content_items: req.body.text.contentItems,
+    consumption_preferences: true,
+    raw_scores: true,
+    headers: {
+      'accept-language': 'en',
+      'accept': 'application/json'
+    }
+  };
 
-personality_insights.profile(params, function(error, response) {
-  if (error)
-    console.log('Error:', error);
-  else
-    // console.log(JSON.stringify(response, null, 2));
-    res.send(response, null, 2)
-  }
-);
+  personality_insights.profile(params, function(error, response) {
+    if (error)
+      console.log('Error:', error);
+    else
+      // console.log(JSON.stringify(response, null, 2));
+      res.send(response, null, 2)
+    }
+  );
+}
 
-  // request({
-  //   url: `https://gateway.watsonplatform.net/personality-insights/api`,
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   }
-  // },
-  //   function (error, response, body) {
-  //
-  //   if(!error && response.statusCode === 200) {
-  //     res.send(body)
-  //   } else {
-  //     res.status(500).send({
-  //       error: 'unknown issue'
-  //     })
-  //   }
-  // })
+function sendgrid(req, res, next) {
+
+  var helper = require('sendgrid').mail;
+  var fromEmail = new helper.Email(req.body.from);
+  var toEmail = new helper.Email(req.body.email);
+  var subject = req.body.subject;
+  var content = new helper.Content('text/plain', req.body.content);
+  var mail = new helper.Mail(fromEmail, subject, toEmail, content);
+
+  var sg = require('sendgrid')(sendgridKey.apiKey);
+  var request = sg.emptyRequest({
+    method: 'POST',
+    path: '/v3/mail/send',
+    body: mail.toJSON()
+  });
+
+  sg.API(request, function (error, response) {
+    if (error) {
+      console.log('Error response received');
+    }
+    console.log(response.statusCode);
+    console.log(response.body);
+    console.log(response.headers);
+    res.send(response)
+  });
 }
 
 
 module.exports = {
   email: email,
   tweets: tweets,
-  watson: watson
+  watson: watson,
+  sendgrid: sendgrid
 }
 
 // request({

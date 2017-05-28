@@ -30,3 +30,18 @@ body {
   display: flex;
   justify-content: space-around;
 }
+
+.email {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /*width: 40%;*/
+}
+
+input[name="subject"] {
+  width: 40%;
+}
+
+textarea[name="email-body"] {
+  width: 40%;
+}

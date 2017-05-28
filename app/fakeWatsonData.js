@@ -1,4 +1,4 @@
-{
+export default {
   "word_count": 111,
   "word_count_message": "There were 111 words in the input. We need a minimum of 600, preferably 1,200 or more, to compute statistically significant estimates",
   "processed_language": "en",

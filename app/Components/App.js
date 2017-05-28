@@ -15,6 +15,23 @@ class App extends Component {
   }
 
 
+  sendEmail() {
+    fetch('api/v1/sendgrid', {
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        email: 'dbull@live.com',
+        from: 'devjbull@gmail.com',
+        subject: `${this.state.subject}`,
+        content: `${this.state.emailBody}`
+      })
+    })
+    .then(results => results.json())
+    .then((data) => {
+      console.log(data);
+    })
+  }
+
   getPersonalityProfle() {
     this.setState({watsonResults: fakeWatsonData})
     // fetch('api/v1/watson', {
@@ -107,6 +124,15 @@ class App extends Component {
           <h4>{location}</h4>
           <button><a href={`${twitter}`} target="_blank">Twitter</a></button>
           <button><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
+          <button onClick={() => {this.getPersonalityProfle()}}>Watson</button>
+          <section className="email">
+            <input onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
+            <textarea onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
+            <article>
+              <button onClick={() => {this.sendEmail()}}>Send Email</button>
+              <button>Run Sentiment Analysis</button>
+            </article>
+          </section>
         </section>
       )
     } else {
@@ -122,7 +148,6 @@ class App extends Component {
         <h1>Unavee</h1>
         <input onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email or Twitter handle"/>
         <button onClick={() => {this.getPlace()}}>Enter</button>
-        <button onClick={() => {this.getPersonalityProfle()}}>Watson</button>
         {this.conditionalRender()}
         <WatsonData watson={this.state.watsonResults}/>
       </div>

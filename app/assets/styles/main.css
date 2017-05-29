@@ -45,3 +45,8 @@ input[name="subject"] {
 textarea[name="email-body"] {
   width: 40%;
 }
+
+.tone {
+  display: flex;
+  justify-content: space-around;
+}

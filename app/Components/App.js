@@ -26,6 +26,7 @@ class App extends Component {
     .then(results => results.json())
     .then((data) => {
       console.log(data);
+      this.setState({toneAnalysis: data})
     })
   }
 
@@ -126,6 +127,43 @@ class App extends Component {
     // })
   // }
 
+  displayToneAnalysis() {
+    if(this.state.toneAnalysis) {
+      const { tone_categories } = this.state.toneAnalysis.document_tone
+      let test = tone_categories[1].tones.map(category => {
+        return (
+          <div>
+            <p>{category.tone_name}</p>
+            <p>{category.score}</p>
+          </div>
+        )
+      })
+      let test2 = tone_categories[0].tones.map(category => {
+        return (
+          <div>
+            <p>{category.tone_name}</p>
+            <p>{category.score}</p>
+          </div>
+        )
+      })
+      return (
+        <div className="tone">
+          <div>
+            <h4>
+              Language Tone
+            </h4>
+            {test}
+          </div>
+          <div>
+            <h4>Emotion Tone</h4>
+            {test2}
+          </div>
+
+        </div>
+      )
+    }
+  }
+
   conditionalRender() {
     const { name, location, organizations, title, twitter, LinkedIn, picture } = this.state
     if (name) {
@@ -147,6 +185,7 @@ class App extends Component {
               <button onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
             </article>
           </section>
+          {this.displayToneAnalysis()}
         </section>
       )
     } else {

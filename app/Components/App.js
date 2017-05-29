@@ -15,6 +15,20 @@ class App extends Component {
   }
 
 
+  toneAnalysis() {
+    fetch('api/v1/emailAnalysis', {
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        text: `${this.state.emailBody}`
+      })
+    })
+    .then(results => results.json())
+    .then((data) => {
+      console.log(data);
+    })
+  }
+
   sendEmail() {
     fetch('api/v1/sendgrid', {
       method: 'POST',
@@ -130,7 +144,7 @@ class App extends Component {
             <textarea onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
             <article>
               <button onClick={() => {this.sendEmail()}}>Send Email</button>
-              <button>Run Sentiment Analysis</button>
+              <button onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
             </article>
           </section>
         </section>

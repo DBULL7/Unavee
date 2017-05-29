@@ -2,3 +2,4 @@ node_modules/
 twitterKey.js
 watsonKeys.js
 sendgridAPIKey.js
+toneAnalyzerKeys.js

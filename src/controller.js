@@ -1,9 +1,10 @@
 const token = require('./twitterKey.js')
 const request = require('request')
 const watsonKeys = require('./watsonKeys.js')
+const toneAnalyzerKeys = require('./toneAnalyzerKeys.js')
 const sendgridKey = require('./sendgridAPIKey.js')
 var PersonalityInsightsV3 = require('watson-developer-cloud/personality-insights/v3')
-
+var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
 
 
 function email(req, res, next) {
@@ -100,12 +101,34 @@ function sendgrid(req, res, next) {
   });
 }
 
+function emailAnalysis(req, res, next) {
+  console.log('this is the friggin request', req.body.text)
+  var tone_analyzer = new ToneAnalyzerV3({
+    username: toneAnalyzerKeys.username,
+    password: toneAnalyzerKeys.password,
+    version_date: '2017-05-20'
+  });
+
+  // Parameters for the call are defined in the tone.json file.
+  var params = {text: req.body.text}
+
+  tone_analyzer.tone(params, function(error, response) {
+    if (error)
+      console.log('error:', error);
+    else
+      // console.log(JSON.stringify(response, null, 2));
+      res.send(response, null, 2)
+    }
+  );
+}
+
 
 module.exports = {
   email: email,
   tweets: tweets,
   watson: watson,
-  sendgrid: sendgrid
+  sendgrid: sendgrid,
+  emailAnalysis: emailAnalysis
 }
 
 // request({

@@ -14,6 +14,17 @@ class App extends Component {
     }
   }
 
+  // componentWillMount() {
+  //   console.log('fired');
+  //   fetch('api/users')
+  //   .then(results => results.json())
+  //   .then((data) => {
+  //     console.log(data)
+  //   }).catch((error) => {
+  //     console.log(error);
+  //   })
+  // }
+
 
   toneAnalysis() {
     fetch('api/v1/emailAnalysis', {

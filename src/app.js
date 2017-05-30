@@ -6,6 +6,9 @@ const bodyParser = require('body-parser')
 const port = (process.env.PORT || 3000);
 const app = express();
 const router = require('./router');
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('../knexfile')[environment];
+const database = require('knex')(configuration)
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,7 +34,20 @@ app.get('/', function (req, res) { res.sendFile(path.join(__dirname, '/../index.
 
 app.use('/api/v1', router);
 
+app.get('/api/users', (request, response) => {
+  database('users').select()
+  .then(users => {
+    let test = JSON.stringify(users)
+    response.status(200).send(test)
+  })
+  .catch(error => {
+    console.log('error', error);
+  })
+})
+
 app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '/../index.html')) });
+
+
 
 app.listen(port);
 

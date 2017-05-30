@@ -34,7 +34,30 @@ app.get('/', function (req, res) { res.sendFile(path.join(__dirname, '/../index.
 
 app.use('/api/v1', router);
 
-app.get('/api/users', (request, response) => {
+app.post('/api/v1/users/new', (request, response) => {
+  console.log(request.body);
+  const user = request.body
+  database('users').insert(user, 'id')
+  .then(user => {
+    response.status(201).json({id: user[0]})
+  })
+  .catch(error => {
+    console.log('error', error);
+  })
+})
+
+app.post('/api/v1/signin', (req, res) => {
+  database('users').where('email', req.body.email).andWhere('password', req.body.password).select()
+    .then(user => {
+      res.status(200).json(user)
+    })
+    .catch(error => {
+      console.log('error: ', error);
+    })
+})
+
+
+app.get('/api/v1/users', (request, response) => {
   database('users').select()
   .then(users => {
     let test = JSON.stringify(users)

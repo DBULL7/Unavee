@@ -173,14 +173,20 @@ class Home extends Component {
   save() {
     console.log(this.props);
     if (this.props.loginUser.id) {
-      console.log('fired')
-      const {name, picture, twitter, title, organizations, lookedUpTweets, location, LinkedIn} = this.state
+      const { name, picture, twitter, title, organizations, location, LinkedIn } = this.state
       fetch('/api/v1/user/favorites/new', {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-          favorite: {name: name, picture: picture, twitter: twitter, title: title},
-          user_id: this.props.loginUser.id
+          name: name,
+          picture: picture,
+          twitter: twitter,
+          title: title,
+          organizations: organizations,
+          location: location,
+          LinkedIn: LinkedIn,
+          user_id: this.props.loginUser.id,
+          email: this.state.input
         })
       }).then(res => res.json())
       .then(data => {

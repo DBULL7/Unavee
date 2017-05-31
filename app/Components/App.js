@@ -15,18 +15,22 @@ class App extends Component {
   }
 
   componentWillMount() {
-    console.log('fired');
-    fetch('api/v1/signin', {
-      method: 'POST',
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({email: 'dbull@live.com', password: 'heybuddy'})
-    })
-    .then(results => results.json())
-    .then((data) => {
-      console.log(data);
-    }).catch(error => {
-      console.log(error);
-    })
+    // console.log('fired');
+
+    //login
+    // fetch('api/v1/signin', {
+    //   method: 'POST',
+    //   headers: {"Content-Type": "application/json"},
+    //   body: JSON.stringify({email: 'dbull@live.com', password: 'heybuddy'})
+    // })
+    // .then(results => results.json())
+    // .then((data) => {
+    //   console.log(data);
+    // }).catch(error => {
+    //   console.log(error);
+    // })
+
+    //create account
     // console.log('fired');
     // fetch('api/v1/users/new', {
     //   method: 'POST',

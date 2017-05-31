@@ -49,7 +49,11 @@ app.post('/api/v1/users/new', (request, response) => {
 app.post('/api/v1/signin', (req, res) => {
   database('users').where('email', req.body.email).andWhere('password', req.body.password).select()
     .then(user => {
-      res.status(200).json(user)
+      if (user[0]) {
+        res.status(200).json(user)
+      } else {
+        res.json({message: 'Password or Email does not match'})
+      }
     })
     .catch(error => {
       console.log('error: ', error);

@@ -50,3 +50,14 @@ textarea[name="email-body"] {
   display: flex;
   justify-content: space-around;
 }
+
+.create-account {
+  display: flex;
+  justify-content: center;
+}
+
+.create-account-form {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}

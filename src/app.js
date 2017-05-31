@@ -72,6 +72,29 @@ app.get('/api/v1/users', (request, response) => {
   })
 })
 
+app.get('/api/v1/user/favorites', (req, res) => {
+  database('favorites').select()
+  .then(favorites => {
+    // let test = JSON.parse(favorites[0].favorite)
+    res.status(200).send(favorites)
+  })
+  .catch(error => {
+    console.log('error', error)
+    res.send(error)
+  })
+})
+
+app.post('/api/v1/user/favorites/new', (req, res) => {
+  const favorite = req.body
+  console.log(favorite)
+  database('favorites').insert(favorite, 'id')
+  .then(favorites => {
+    res.status(200).send(favorites)
+  }).catch(error => {
+    res.send(error)
+  })
+})
+
 app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '/../index.html')) });
 
 

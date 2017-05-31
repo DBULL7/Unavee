@@ -6,8 +6,8 @@ import { WatsonData } from './WatsonData'
 // import { BrowserRouter as Router, Route, browserHistory } from 'react-router-dom'
 
 class Home extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       input: '',
       scrubbedTweets: { "contentItems": []}
@@ -170,6 +170,31 @@ class Home extends Component {
     }
   }
 
+  save() {
+    console.log(this.props);
+    if (this.props.loginUser.id) {
+      const { name, picture, twitter, title, organizations, location, LinkedIn } = this.state
+      fetch('/api/v1/user/favorites/new', {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          name: name,
+          picture: picture,
+          twitter: twitter,
+          title: title,
+          organizations: organizations,
+          location: location,
+          LinkedIn: LinkedIn,
+          user_id: this.props.loginUser.id,
+          email: this.state.input
+        })
+      }).then(res => res.json())
+      .then(data => {
+        console.log(data);
+      })
+    }
+  }
+
   conditionalRender() {
     const { name, location, organizations, title, twitter, LinkedIn, picture } = this.state
     if (name) {
@@ -183,6 +208,7 @@ class Home extends Component {
           <button><a href={`${twitter}`} target="_blank">Twitter</a></button>
           <button><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
           <button onClick={() => {this.getPersonalityProfle()}}>Watson</button>
+          <button onClick={() => {this.save()}}>Save Search</button>
           <section className="email">
             <input onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
             <textarea onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>

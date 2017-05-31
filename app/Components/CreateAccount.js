@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 
 class CreateAccount extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       name: '',
       email: '',
@@ -20,6 +20,7 @@ class CreateAccount extends Component {
     .then(results => results.json())
     .then((data) => {
       console.log(data)
+      this.props.handleLoginUser({id: data.id, email: this.state.email, name: this.state.name})
     }).catch((error) => {
       console.log(error);
     })

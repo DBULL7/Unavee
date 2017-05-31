@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import { Route, Link, Switch } from 'react-router-dom'
-import Unavee from './Unavee'
-import CreateAccount from './CreateAccount'
-import Login from './Login'
+import HomeContainer from './HomeContainer'
+import CreateAccountContainer from './CreateAccountContainer'
+import LoginContainer from './LoginContainer'
 
 class App extends Component {
   render() {
@@ -10,16 +10,16 @@ class App extends Component {
       <Switch>
         <Route exact path='/CreateAccount' render={() => {
           return (
-            <CreateAccount/>
+            <CreateAccountContainer/>
           )
         }}/>
         <Route exact path='/Login' render={() => {
           return (
-            <Login/>
+            <LoginContainer/>
           )
         }}/>
-        <Route exact path='/Unavee' render={() => {
-          return <Unavee />
+        <Route exact path='/' render={() => {
+          return <HomeContainer />
         }}/>
       </Switch>
     )

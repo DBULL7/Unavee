@@ -5,7 +5,7 @@ import fakeWatsonData from '../fakeWatsonData.js'
 import { WatsonData } from './WatsonData'
 // import { BrowserRouter as Router, Route, browserHistory } from 'react-router-dom'
 
-class Unavee extends Component {
+class Home extends Component {
   constructor() {
     super()
     this.state = {
@@ -14,11 +14,11 @@ class Unavee extends Component {
     }
   }
 
-  componentWillMount() {
-    // console.log('fired');
-
-
-  }
+  // componentWillMount() {
+  //   // console.log('fired');
+  //
+  //
+  // }
 
 
   toneAnalysis() {
@@ -93,7 +93,7 @@ class Unavee extends Component {
     })
   }
 
-  getPlace() {
+  getFullContactData() {
     const {contactInfo, demographics, socialProfiles, organizations, photos} = fakeData
     let twitterUrl = socialProfiles.forEach(account => {
       if (account.type === 'twitter') {
@@ -206,7 +206,7 @@ class Unavee extends Component {
       <div>
         <h1>Unavee</h1>
         <input onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email or Twitter handle"/>
-        <button onClick={() => {this.getPlace()}}>Enter</button>
+        <button onClick={() => {this.getFullContactData()}}>Enter</button>
         {this.conditionalRender()}
         <WatsonData watson={this.state.watsonResults}/>
       </div>
@@ -214,4 +214,4 @@ class Unavee extends Component {
   }
 }
 
-export default Unavee
+export default Home

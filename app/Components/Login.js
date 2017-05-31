@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 
 class Login extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       email: '',
       password: ''
@@ -18,6 +18,8 @@ class Login extends Component {
     .then(results => results.json())
     .then((data) => {
       console.log(data);
+      const {email, id, name} = data[0]
+      this.props.handleLoginUser({id: id, email: email, name: name})
     }).catch(error => {
       console.log(error);
     })

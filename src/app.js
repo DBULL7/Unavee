@@ -72,7 +72,20 @@ app.get('/api/v1/users', (request, response) => {
   })
 })
 
-app.get('/api/v1/user/favorites', (req, res) => {
+app.get('/api/v1/:user/favorites', (req, res) => {
+  const { user } = req.params
+  database('favorites').where('user_id', user).select()
+  .then(favorites => {
+    // let test = JSON.parse(favorites[0].favorite)
+    res.status(200).send(favorites)
+  })
+  .catch(error => {
+    console.log('error', error)
+    res.send(error)
+  })
+})
+
+app.get('/api/v1/favorites', (req, res) => {
   database('favorites').select()
   .then(favorites => {
     // let test = JSON.parse(favorites[0].favorite)

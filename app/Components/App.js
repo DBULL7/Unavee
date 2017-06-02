@@ -4,6 +4,7 @@ import HomeContainer from './HomeContainer'
 import CreateAccountContainer from './CreateAccountContainer'
 import LoginContainer from './LoginContainer'
 import { Navbar } from './Navbar'
+import FavoritesContainer from './FavoritesContainer'
 
 class App extends Component {
   render() {
@@ -11,6 +12,9 @@ class App extends Component {
       <section>
         <Navbar history={this.props.history}/>
         <Switch>
+          <Route exact history={this.props.history} path='/Favorites' render={() => {
+            return <FavoritesContainer/>
+          }}/>
           <Route exact path='/CreateAccount' render={() => {
             return (
               <CreateAccountContainer/>

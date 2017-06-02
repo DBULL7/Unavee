@@ -73,3 +73,35 @@ textarea[name="email-body"] {
   justify-content: center;
   width: 100%;
 }
+
+.nav-menu {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-menu li {
+   display: inline;
+   list-style-type: none;
+}
+
+.nav-menu ul:hover > ul {
+   display:flex;
+   flex-direction: column;
+}
+
+.clearfix {
+  padding: 0;
+  text-align: right;
+  position: absolute;
+}
+
+.clearfix:after {
+content: "";
+display: table;
+}
+
+.sub-menu {
+   display:none;
+   padding: 0;
+   background: #ccc;
+}

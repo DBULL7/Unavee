@@ -236,7 +236,7 @@ class Home extends Component {
           picture: picture,
           twitter: twitter,
           title: title,
-          organization: organization,
+          organizations: organization,
           location: location,
           LinkedIn: LinkedIn,
           user_id: this.props.loginUser.id,

@@ -107,6 +107,16 @@ app.post('/api/v1/user/favorites/new', (req, res) => {
   })
 })
 
+app.delete('/api/v1/:user/:favoriteID', (req, res) => {
+  const { user, favoriteID } = req.params
+  database('favorites').where('id', favoriteID ).del()
+  .then(favorites => {
+    res.status(200).json({message: 'Deleted Favorite Successfully'})
+  }).catch(error => {
+    res.send(error)
+  })
+})
+
 app.get('/api/v1/searches', (req, res) => {
   database('searches').select()
   .then(searches => {

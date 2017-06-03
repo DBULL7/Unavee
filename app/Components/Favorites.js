@@ -22,11 +22,17 @@ class Favorites extends Component {
         })
   }
 
+  deleteFavorite(favoriteID) {
+    fetch(`/api/v1/${this.props.loginUser.id}/${favoriteID}`, {
+      method: 'DELETE'
+    })
+  }
+
   conditionalRender() {
     if(!this.state.signedIn) {
       return <div>Not Signed In</div>
     }
-    let test = this.state.favorites.map(favorite => {
+    let favorites = this.state.favorites.map(favorite => {
       const { name, picture, id, title, organizations } = favorite
       return (
         <article className='favorites-card' key={id}>
@@ -34,6 +40,7 @@ class Favorites extends Component {
             <img src={`${picture}`}/>
           </div>
           <div className='favorites-card-info'>
+            <button onClick={() => {this.deleteFavorite(id)}}>Delete</button>
             <p>{name}</p>
             <p>{title}</p>
             <p>{organizations}</p>
@@ -44,7 +51,7 @@ class Favorites extends Component {
     })
     return (
       <section>
-        {test}
+        {favorites}
       </section>
     )
   }

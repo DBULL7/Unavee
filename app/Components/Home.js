@@ -93,8 +93,52 @@ class Home extends Component {
     })
   }
 
-  getFullContactData() {
-    const {contactInfo, demographics, socialProfiles, organizations, photos} = fakeData
+  checkDatabaseForSearch() {
+    const search = this.state.input
+    fetch(`/api/v1/${search}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data)
+      this.databaseSearchResult(data)
+    }).catch(error => {
+      console.log(error)
+      this.fullContactAPICall()
+    })
+  }
+
+  databaseSearchResult(data) {
+    const { name, organization, title, location, picture, LinkedIn, twitter } = data[0]
+    this.setState({ name: name,
+                    organizations: organization,
+                    title: title,
+                    location: location,
+                    picture: picture,
+                    LinkedIn: LinkedIn,
+                    twitter: twitter
+                  })
+  }
+
+
+  fullContactAPICall() {
+    // fetch(`/api/v1/user?email=${this.state.input}`, {
+    //   method: "POST",
+    //   headers: {"Content-Type": "application/json"},
+    //   body: JSON.stringify({
+    //     // email: 'dbull@live.com'
+    //     email: this.state.input
+    //   })
+    // })
+    // .then(results => results.json())
+    // .then((data) => {
+    //   console.log(data)
+    // })
+    // }
+    // need to save the data to our db
+    this.scrubSearch(fakeData)
+  }
+
+  scrubSearch(data) {
+    const { contactInfo, demographics, socialProfiles, organizations, photos } = data
     let twitterUrl = socialProfiles.forEach(account => {
       if (account.type === 'twitter') {
         console.log(account.url)
@@ -117,21 +161,9 @@ class Home extends Component {
       organizations: organizations[0].name, // need to make this dynamic in case they have more than one org.
       title: organizations[0].title,
       location: demographics.locationGeneral,
-      })
-    }
-    // fetch(`/api/v1/user?email=${this.state.input}`, {
-    //   method: "POST",
-    //   headers: {"Content-Type": "application/json"},
-    //   body: JSON.stringify({
-    //     // email: 'dbull@live.com'
-    //     email: this.state.input
-    //   })
-    // })
-    // .then(results => results.json())
-    // .then((data) => {
-    //   console.log(data)
-    // })
-  // }
+    })
+  }
+
 
   displayToneAnalysis() {
     if(this.state.toneAnalysis) {
@@ -155,16 +187,13 @@ class Home extends Component {
       return (
         <div className="tone">
           <div>
-            <h4>
-              Language Tone
-            </h4>
+            <h4>Language Tone</h4>
             {test}
           </div>
           <div>
             <h4>Emotion Tone</h4>
             {test2}
           </div>
-
         </div>
       )
     }
@@ -232,7 +261,7 @@ class Home extends Component {
       <div>
         <h1>Unavee</h1>
         <input onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email or Twitter handle"/>
-        <button onClick={() => {this.getFullContactData()}}>Enter</button>
+        <button onClick={() => {this.checkDatabaseForSearch()}}>Enter</button>
         {this.conditionalRender()}
         <WatsonData watson={this.state.watsonResults}/>
       </div>

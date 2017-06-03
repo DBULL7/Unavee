@@ -108,6 +108,37 @@ app.post('/api/v1/user/favorites/new', (req, res) => {
   })
 })
 
+app.get('/api/v1/searches', (req, res) => {
+  database('searches').select()
+  .then(searches => {
+    res.status(200).send(searches)
+  })
+})
+
+app.get('/api/v1/:search', (req, res) => {
+  const { search } = req.params
+  database('searches').where('search', search)
+  .then(results => {
+    if (results[0]) {
+      res.status(200).send(results)
+    } else {
+      res.status(404).send('Not found')
+    }
+  }).catch(error => {
+    res.status(404).send(error)
+  })
+})
+
+app.post('/api/v1/searches/new', (req, res) => {
+  const search = req.body
+  database('searches').insert(search, 'id')
+  .then(response => {
+    res.status(200)
+  }).catch(error => {
+    res.send(error)
+  })
+})
+
 app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '/../index.html')) });
 
 

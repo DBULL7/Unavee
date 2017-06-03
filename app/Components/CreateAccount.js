@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
 class CreateAccount extends Component {
   constructor(props) {
@@ -12,6 +12,9 @@ class CreateAccount extends Component {
   }
 
   createAccount() {
+    //need to see if user already exists
+
+
     fetch('api/v1/users/new', {
       method: 'POST',
       headers: {"Content-Type": "application/json"},

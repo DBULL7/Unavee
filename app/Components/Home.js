@@ -109,7 +109,7 @@ class Home extends Component {
   databaseSearchResult(data) {
     const { name, organization, title, location, picture, LinkedIn, twitter } = data[0]
     this.setState({ name: name,
-                    organizations: organization,
+                    organization: organization,
                     title: title,
                     location: location,
                     picture: picture,

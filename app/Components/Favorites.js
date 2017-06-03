@@ -25,6 +25,16 @@ class Favorites extends Component {
   deleteFavorite(favoriteID) {
     fetch(`/api/v1/${this.props.loginUser.id}/${favoriteID}`, {
       method: 'DELETE'
+    }).then(res => res.json())
+    .then(data => {
+      console.log(data);
+    })
+    this.state.favorites.forEach(favorite => {
+      if(favorite.id === favoriteID) {
+        let newState = Object.assign(this.state.favorites)
+        newState.splice(favorite, 1)
+        this.setState({favorites: newState})
+      }
     })
   }
 

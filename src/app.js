@@ -64,8 +64,7 @@ app.post('/api/v1/signin', (req, res) => {
 app.get('/api/v1/users', (request, response) => {
   database('users').select()
   .then(users => {
-    let test = JSON.stringify(users)
-    response.status(200).send(test)
+    response.status(200).send(users)
   })
   .catch(error => {
     console.log('error', error);

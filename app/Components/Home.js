@@ -37,20 +37,24 @@ class Home extends Component {
   }
 
   sendEmail() {
-    fetch('api/v1/sendgrid', {
-      method: 'POST',
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        email: 'dbull@live.com',
-        from: 'devjbull@gmail.com',
-        subject: `${this.state.subject}`,
-        content: `${this.state.emailBody}`
+    if(this.props.loginUser.email) {
+      fetch('api/v1/sendgrid', {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          email: `${this.state.input}`,
+          from: `${this.props.loginUser.email}`,
+          subject: `${this.state.subject}`,
+          content: `${this.state.emailBody}`
+        })
       })
-    })
-    .then(results => results.json())
-    .then((data) => {
-      console.log(data);
-    })
+      .then(results => results.json())
+      .then((data) => {
+        console.log(data);
+      })
+    } else {
+      console.log('not signed in')
+    }
   }
 
   getPersonalityProfle() {

@@ -3,7 +3,6 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       return Promise.all([
         knex('searches').insert({
-                                id: 1,
                                 search: 'dbull@live.com',
                                 name: 'Devon Bull',
                                 organization: 'KU Entrepreneurship Club',

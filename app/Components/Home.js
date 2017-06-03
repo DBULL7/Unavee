@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import fakeData from '../dbullData.js'
 import fakeWatsonData from '../fakeWatsonData.js'
 import { WatsonData } from './WatsonData'
-// import { BrowserRouter as Router, Route, browserHistory } from 'react-router-dom'
+
 
 class Home extends Component {
   constructor(props) {
@@ -139,28 +139,49 @@ class Home extends Component {
 
   scrubSearch(data) {
     const { contactInfo, demographics, socialProfiles, organizations, photos } = data
-    let twitterUrl = socialProfiles.forEach(account => {
+    let twitter = ''
+    let linkedin = ''
+    socialProfiles.forEach(account => {
       if (account.type === 'twitter') {
-        console.log(account.url)
+        twitter = account.url
         this.getTweets(account.id)
         this.setState({twitter: account.url})
       } else if (account.type === 'linkedin') {
         this.setState({LinkedIn: account.url})
+        linkedin = account.url
       }
     })
-
+    let picture = ''
     let photo = photos.forEach(photo => {
       if(photo.isPrimary) {
         this.setState({picture: photo.url})
+        picture = photo.url
       }
     })
 
-    console.log(fakeData);
     this.setState({
       name: contactInfo.fullName,
-      organizations: organizations[0].name, // need to make this dynamic in case they have more than one org.
+      organization: organizations[0].name, // need to make this dynamic in case they have more than one org.
       title: organizations[0].title,
       location: demographics.locationGeneral,
+    })
+
+    fetch('/api/v1/searches/new', {
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+                            search: this.state.input,
+                            name: contactInfo.fullName,
+                            organization: organizations[0].name,
+                            title: organizations[0].title,
+                            location: demographics.locationGeneral,
+                            picture: picture,
+                            LinkedIn: linkedin,
+                            twitter: twitter,
+      })
+    }).then(res => res.json())
+    .then(data => {
+      console.log(data)
     })
   }
 
@@ -202,7 +223,7 @@ class Home extends Component {
   save() {
     console.log(this.props);
     if (this.props.loginUser.id) {
-      const { name, picture, twitter, title, organizations, location, LinkedIn } = this.state
+      const { name, picture, twitter, title, organization, location, LinkedIn } = this.state
       fetch('/api/v1/user/favorites/new', {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
@@ -211,7 +232,7 @@ class Home extends Component {
           picture: picture,
           twitter: twitter,
           title: title,
-          organizations: organizations,
+          organization: organization,
           location: location,
           LinkedIn: LinkedIn,
           user_id: this.props.loginUser.id,
@@ -225,14 +246,14 @@ class Home extends Component {
   }
 
   conditionalRender() {
-    const { name, location, organizations, title, twitter, LinkedIn, picture } = this.state
+    const { name, location, organization, title, twitter, LinkedIn, picture } = this.state
     if (name) {
       return (
         <section>
           <img src={`${picture}`}/>
           <h4>{name}</h4>
           <h4>{title}</h4>
-          <h4>{organizations}</h4>
+          <h4>{organization}</h4>
           <h4>{location}</h4>
           <button><a href={`${twitter}`} target="_blank">Twitter</a></button>
           <button><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>

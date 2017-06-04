@@ -18,6 +18,10 @@ body {
   text-align: center;
 }*/
 
+a {
+  text-decoration: none;
+  color: #222;
+}
 
 .home-search {
   padding-top: 180px;
@@ -58,7 +62,7 @@ body {
 
 }
 
-.home-search-button {
+.button {
   font-size: 14px;
   font-weight: 600;
   margin-top: 30px;
@@ -66,6 +70,10 @@ body {
   height: 30px;
   border: 0;
   background-color: #F6F6F6;
+}
+
+.watson-button {
+  width: 180px;
 }
 
 .searched {
@@ -153,20 +161,41 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  /*justify-content: center;*/
   width: 40%;
 }
 
 input[name="subject"] {
-  width: 40%;
+  width: 80%;
+  font-size: 16px;
+  height: 20px;
+  margin-bottom: 15px;
+  border: 1px solid #222;
+  border-radius: 3px;
 }
 
 textarea[name="email-body"] {
-  width: 40%;
+  width: 80%;
+  height: 300px;
+  font-size: 16px;
+  border-radius: 3px;
+}
+
+.results-pic {
+  border-radius: 50%;
+}
+
+.social-media-buttons {
+  display: flex;
+  justify-content: center;
 }
 
 .tone {
-  display: flex;
-  justify-content: space-around;
+  margin-top: 40px;
+}
+
+.emotions {
+
 }
 
 .create-account {

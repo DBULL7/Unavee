@@ -142,7 +142,7 @@ app.post('/api/v1/searches/new', (req, res) => {
   const search = req.body
   database('searches').insert(search, 'id')
   .then(response => {
-    res.status(200)
+    res.status(200).json({message: 'new search has been added to the database'})
   }).catch(error => {
     res.send(error)
   })

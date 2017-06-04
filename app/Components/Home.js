@@ -110,6 +110,7 @@ class Home extends Component {
     .then(data => {
       console.log(data)
       this.databaseSearchResult(data)
+      this.clearInput()
     }).catch(error => {
       console.log(error)
       this.fullContactAPICall()
@@ -192,6 +193,7 @@ class Home extends Component {
     }).then(res => res.json())
     .then(data => {
       console.log(data)
+      this.clearInput()
     })
   }
 
@@ -199,32 +201,38 @@ class Home extends Component {
   displayToneAnalysis() {
     if(this.state.toneAnalysis) {
       const { tone_categories } = this.state.toneAnalysis.document_tone
-      let test = tone_categories[1].tones.map(category => {
-        return (
-          <div>
-            <p>{category.tone_name}</p>
-            <p>{category.score}</p>
-          </div>
-        )
-      })
-      let test2 = tone_categories[0].tones.map(category => {
-        return (
-          <div>
-            <p>{category.tone_name}</p>
-            <p>{category.score}</p>
-          </div>
-        )
+      let test = (categoryName) => {
+        switch (categoryName) {
+          case 'Anger':
+            return '😡'
+          case 'Disgust':
+            return '🤢'
+          case 'Fear':
+            return '😱'
+          case 'Joy':
+            return '😄'
+          case 'Sadness':
+            return '😓'
+          default:
+            return '😐'
+        }
+      }
+      let emotions = tone_categories[0].tones.map(category => {
+        if (category.score > .5) {
+          return (
+            <div>
+              <p>{test(category.tone_name)}</p>
+              <p>Probability: {Math.round(category.score*100)}%</p>
+            </div>
+          )
+        }
       })
       return (
         <div className="tone">
-          <div>
-            <h4>Language Tone</h4>
-            {test}
-          </div>
-          <div>
-            <h4>Emotion Tone</h4>
-            {test2}
-          </div>
+            <h4>Message Emotional Tone</h4>
+            <div className='emotions'>
+              {emotions}
+            </div>
         </div>
       )
     }
@@ -295,8 +303,8 @@ class Home extends Component {
     if (twitter) {
       return (
         <div>
-          <button><a href={`${twitter}`} target="_blank">Twitter</a></button>
-          <button onClick={() => {this.getPersonalityProfle()}}>Watson</button>
+          <button className='button'><a href={`${twitter}`} target="_blank">Twitter</a></button>
+          <button className='button watson-button' onClick={() => {this.getPersonalityProfle()}}>Get Watson Personality Insight</button>
         </div>
       )
     }
@@ -309,24 +317,26 @@ class Home extends Component {
         <section className='search-results'>
           <section className='search-result-data'>
             {this.displayModal(this.state.message)}
-            <img src={`${picture}`}/>
+            <img className='results-pic' src={`${picture}`} alt='profile pic of searched individual'/>
             <h3>{name}</h3>
             <h4>{title}</h4>
             <h4>{organization}</h4>
             <h4>{location}</h4>
-            <button><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
-            {this.showTwitterWatsonButton()}
-            <button onClick={() => {this.save()}}>Save Search</button>
+            <div className='social-media-buttons'>
+              <button className='button'><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
+              {this.showTwitterWatsonButton()}
+              <button className='button' onClick={() => {this.save()}}>Save Search</button>
+            </div>
           </section>
           <section className="email">
             <input onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
             <textarea onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
             <article>
-              <button onClick={() => {this.sendEmail()}}>Send Email</button>
-              <button onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
+              <button className='button' onClick={() => {this.sendEmail()}}>Send Email</button>
+              <button className='button' onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
+              {this.displayToneAnalysis()}
             </article>
           </section>
-          {this.displayToneAnalysis()}
         </section>
       )
     } else {
@@ -340,6 +350,12 @@ class Home extends Component {
     this.setState({input: '', searched: true})
   }
 
+  enter(event) {
+    if(event.key === 'Enter' && this.checkInput()) {
+      this.checkDatabaseForSearch()
+    }
+  }
+
   navBarDisplay() {
     if(this.state.searched) {
       return (
@@ -347,7 +363,7 @@ class Home extends Component {
           <h1 className='searched-title'>Unavee</h1>
           <div className='searched-form'>
             <div className='searched-bar-container'>
-              <input className='searched-search-bar' value={this.state.input} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
+              <input className='searched-search-bar' value={this.state.input} onKeyPress={(e) => this.enter(e)} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
               {/* <button disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch(); this.clearInput()}}>Enter</button> */}
             </div>
           </div>
@@ -359,9 +375,9 @@ class Home extends Component {
         <h1 className='home-title'>Unavee</h1>
         <div className='home-form'>
           <div className='search-bar-container'>
-            <input className='home-search-bar' value={this.state.input} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
+            <input className='home-search-bar' value={this.state.input} onKeyPress={(e) => this.enter(e)} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
           </div>
-          <button className="home-search-button" disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch(); this.clearInput()}}>Search</button>
+          <button className="button" disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch()}}>Search</button>
         </div>
       </article>
     )

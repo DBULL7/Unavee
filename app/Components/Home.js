@@ -10,7 +10,8 @@ class Home extends Component {
     super(props)
     this.state = {
       input: '',
-      scrubbedTweets: { "contentItems": []}
+      scrubbedTweets: { "contentItems": []},
+      logginModal: false
     }
   }
 
@@ -54,6 +55,7 @@ class Home extends Component {
       })
     } else {
       console.log('not signed in')
+      this.setState({logginModal: true})
     }
   }
 
@@ -249,11 +251,46 @@ class Home extends Component {
     }
   }
 
+  fadeOut() {
+    setTimeout(() => {
+      this.setState({logginModal: false})
+    }, 2000)
+  }
+
+  exitPopup() {
+   this.setState({logginModal: false})
+  }
+
+  navigateTo(path) {
+    this.props.history.replace(`/${path}`)
+  }
+
+  displayModal() {
+    if(this.state.logginModal) {
+      this.fadeOut()
+      return (
+        <article className='popup'>
+          <div className='popup-header'>
+            <button className='popup-exit-button' onClick={() => this.exitPopup()}>&times;</button>
+          </div>
+          <div>
+            <p className='popup-message'>Login or Create an Account to Favorite Movies</p>
+            <div className='popup-buttons'>
+              <button className='login-popup-button' onClick={() => this.navigateTo('Login')}>Login</button>
+              <button className='createAccount-popup-button' onClick={() => this.navigateTo('CreateAccount')}>CreateAccount</button>
+            </div>
+          </div>
+        </article>
+      )
+    }
+  }
+
   conditionalRender() {
     const { name, location, organization, title, twitter, LinkedIn, picture } = this.state
     if (name) {
       return (
         <section>
+          {this.displayModal()}
           <img src={`${picture}`}/>
           <h4>{name}</h4>
           <h4>{title}</h4>

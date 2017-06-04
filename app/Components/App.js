@@ -13,20 +13,18 @@ class App extends Component {
         <NavbarContainer history={this.props.history}/>
         <Switch>
           <Route exact history={this.props.history} path='/Favorites' render={() => {
-            return <FavoritesContainer/>
+            return <FavoritesContainer history={this.props.history}/>
           }}/>
-          <Route exact path='/CreateAccount' render={() => {
+          <Route exact path='/CreateAccount' history={this.props.history} render={() => {
             return (
-              <CreateAccountContainer/>
+              <CreateAccountContainer history={this.props.history}/>
             )
           }}/>
-          <Route exact path='/Login' render={() => {
-            return (
-              <LoginContainer/>
-            )
+          <Route exact path='/Login' history={this.props.history} render={() => {
+            return <LoginContainer history={this.props.history}/>
           }}/>
-          <Route exact path='/' render={() => {
-            return <HomeContainer />
+          <Route exact path='/' history={this.props.history} render={() => {
+            return <HomeContainer history={this.props.history}/>
           }}/>
         </Switch>
       </section>

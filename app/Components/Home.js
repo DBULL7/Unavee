@@ -10,6 +10,7 @@ class Home extends Component {
     super(props)
     this.state = {
       input: '',
+      searched: false,
       scrubbedTweets: { "contentItems": []},
       logginModal: false
     }
@@ -21,6 +22,9 @@ class Home extends Component {
   //
   // }
 
+  checkInput() {
+    return (this.state.input !== '')
+  }
 
   toneAnalysis() {
     fetch('api/v1/emailAnalysis', {
@@ -302,16 +306,18 @@ class Home extends Component {
     const { name, location, organization, title, twitter, LinkedIn, picture } = this.state
     if (name) {
       return (
-        <section>
-          {this.displayModal(this.state.message)}
-          <img src={`${picture}`}/>
-          <h3>{name}</h3>
-          <h4>{title}</h4>
-          <h4>{organization}</h4>
-          <h4>{location}</h4>
-          <button><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
-          {this.showTwitterWatsonButton()}
-          <button onClick={() => {this.save()}}>Save Search</button>
+        <section className='search-results'>
+          <section className='search-result-data'>
+            {this.displayModal(this.state.message)}
+            <img src={`${picture}`}/>
+            <h3>{name}</h3>
+            <h4>{title}</h4>
+            <h4>{organization}</h4>
+            <h4>{location}</h4>
+            <button><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
+            {this.showTwitterWatsonButton()}
+            <button onClick={() => {this.save()}}>Save Search</button>
+          </section>
           <section className="email">
             <input onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
             <textarea onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
@@ -330,15 +336,44 @@ class Home extends Component {
     }
   }
 
+  clearInput() {
+    this.setState({input: '', searched: true})
+  }
+
+  navBarDisplay() {
+    if(this.state.searched) {
+      return (
+        <article className="searched">
+          <h1 className='searched-title'>Unavee</h1>
+          <div className='searched-form'>
+            <div className='searched-bar-container'>
+              <input className='searched-search-bar' value={this.state.input} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
+              {/* <button disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch(); this.clearInput()}}>Enter</button> */}
+            </div>
+          </div>
+        </article>
+      )
+    }
+    return (
+      <article className='home-search'>
+        <h1 className='home-title'>Unavee</h1>
+        <div className='home-form'>
+          <div className='search-bar-container'>
+            <input className='home-search-bar' value={this.state.input} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
+          </div>
+          <button className="home-search-button" disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch(); this.clearInput()}}>Search</button>
+        </div>
+      </article>
+    )
+  }
+
   render() {
     return (
-      <div>
-        <h1>Unavee</h1>
-        <input onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email or Twitter handle"/>
-        <button onClick={() => {this.checkDatabaseForSearch()}}>Enter</button>
+      <section>
+        {this.navBarDisplay()}
         {this.conditionalRender()}
         <WatsonData watson={this.state.watsonResults}/>
-      </div>
+      </section>
     )
   }
 }

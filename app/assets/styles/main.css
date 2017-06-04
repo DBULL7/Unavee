@@ -1,20 +1,127 @@
 body {
-  background: #f4f4f4;
-  font-family: sans-serif;
+  background: #fff;
+  font-family: 'Roboto', sans-serif;
   font-weight: 100;
+  margin: 0;
+  padding: 0;
 }
 
-#main h1 {
+/*#main h1 {
   padding: 20px;
   border-bottom: 1px dashed #aaa;
   color: rgba(0,0,0,0.6);
   font-weight: 100;
   font-family: sans-serif;
-}
+}*/
 
-#main {
+/*#main {
+  text-align: center;
+}*/
+
+
+.home-search {
+  padding-top: 180px;
   text-align: center;
 }
+
+.home-title {
+  font-size: 70px;
+  margin: 0;
+  margin-bottom: 32px;
+}
+
+
+.home-search-bar {
+  display: flex;
+
+  /*height: 30px;*/
+  /*font-size: 26px;*/
+  /*width: 30%;*/
+  /*margin-left: 35%;*/
+  border: none;
+  padding: 10px;
+  /*margin: 10px;*/
+  height: 20px;
+  width: 500px;
+  border:1px solid #eaeaea;
+  outline:none;
+  font-size: 16px;
+  box-shadow: 0px 1.1px 5.5px -2px #222;
+}
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+}
+
+.home-form {
+
+}
+
+.home-search-button {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 30px;
+  width: 100px;
+  height: 30px;
+  border: 0;
+  background-color: #F6F6F6;
+}
+
+.searched {
+  background-color: #FAFAFA;
+  padding-bottom: 20px;
+}
+
+.searched-title {
+  margin: 0;
+  position: absolute;
+  text-align: left;
+  font-size: 32px;
+  padding-top: 10px;
+  padding-left: 15px;
+}
+
+.searched-form {
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.searched-bar-container {
+  display:
+}
+
+.searched-search-bar {
+  display: flex;
+
+  /*height: 30px;*/
+  /*font-size: 26px;*/
+  /*width: 30%;*/
+  /*margin-left: 35%;*/
+  border: none;
+  padding: 10px;
+  /*margin: 10px;*/
+  height: 20px;
+  width: 500px;
+  border:1px solid #eaeaea;
+  outline:none;
+  font-size: 16px;
+  box-shadow: 0px 1.1px 5.5px -2px #222;
+  background-image: url('../search_icon.svg');
+  background-repeat: no-repeat;
+  background-position: 98%;
+}
+
+
+
+.menu-icon {
+  margin-top: 10px;
+  margin-right: 10px;
+  height: 40px;
+  width: 40px;
+}
+
 
 .watsonData {
   display: flex;
@@ -31,11 +138,22 @@ body {
   justify-content: space-around;
 }
 
+.search-results {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 100px;
+}
+
+.search-result-data {
+  width: 40%;
+  text-align: center;
+}
+
 .email {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /*width: 40%;*/
+  width: 40%;
 }
 
 input[name="subject"] {
@@ -74,6 +192,8 @@ textarea[name="email-body"] {
   width: 100%;
 }
 
+
+
 .nav-menu {
   display: flex;
   justify-content: flex-end;
@@ -93,6 +213,7 @@ textarea[name="email-body"] {
   padding: 0;
   text-align: right;
   position: absolute;
+  margin: 0;
 }
 
 .clearfix:after {

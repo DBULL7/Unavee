@@ -10,6 +10,7 @@ class Home extends Component {
     super(props)
     this.state = {
       input: '',
+      searched: false,
       scrubbedTweets: { "contentItems": []},
       logginModal: false
     }
@@ -21,6 +22,9 @@ class Home extends Component {
   //
   // }
 
+  checkInput() {
+    return (this.state.input !== '')
+  }
 
   toneAnalysis() {
     fetch('api/v1/emailAnalysis', {
@@ -330,15 +334,42 @@ class Home extends Component {
     }
   }
 
+  clearInput() {
+    this.setState({input: '', searched: true})
+  }
+
+  navBarDisplay() {
+    if(this.state.searched) {
+      return (
+        <article className="searched">
+          <h1>Unavee</h1>
+          <div>
+            <input value={this.state.input} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
+            <button disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch(); this.clearInput()}}>Enter</button>
+          </div>
+        </article>
+      )
+    }
+    return (
+      <article className='home-search'>
+        <h1 className='home-title'>Unavee</h1>
+        <div className='home-form'>
+          <div className='search-bar-container'>
+            <input className='home-search-bar' value={this.state.input} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
+          </div>
+          <button className="home-search-button" disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch(); this.clearInput()}}>Search</button>
+        </div>
+      </article>
+    )
+  }
+
   render() {
     return (
-      <div>
-        <h1>Unavee</h1>
-        <input onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email or Twitter handle"/>
-        <button onClick={() => {this.checkDatabaseForSearch()}}>Enter</button>
+      <section>
+        {this.navBarDisplay()}
         {this.conditionalRender()}
         <WatsonData watson={this.state.watsonResults}/>
-      </div>
+      </section>
     )
   }
 }

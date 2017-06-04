@@ -1,19 +1,69 @@
 body {
-  background: #f4f4f4;
-  font-family: sans-serif;
+  background: #fff;
+  font-family: 'Roboto', sans-serif;
   font-weight: 100;
 }
 
-#main h1 {
+/*#main h1 {
   padding: 20px;
   border-bottom: 1px dashed #aaa;
   color: rgba(0,0,0,0.6);
   font-weight: 100;
   font-family: sans-serif;
+}*/
+
+/*#main {
+  text-align: center;
+}*/
+
+
+.home-search {
+  padding-top: 240px;
+  text-align: center;
 }
 
-#main {
-  text-align: center;
+.home-title {
+  font-size: 40px;
+  margin: 0;
+  margin-bottom: 15px;
+}
+
+
+.home-search-bar {
+  display: flex;
+
+  /*height: 30px;*/
+  /*font-size: 26px;*/
+  /*width: 30%;*/
+  /*margin-left: 35%;*/
+  border: none;
+  padding: 10px;
+  /*margin: 10px;*/
+  height: 20px;
+  width: 500px;
+  border:1px solid #eaeaea;
+  outline:none;
+  font-size: 16px;
+  box-shadow: 0px 1.1px 5.5px -2px #222;
+}
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+}
+
+.home-form {
+
+}
+
+.home-search-button {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 30px;
+  width: 100px;
+  height: 30px;
+  border: 0;
+  background-color: #F6F6F6;
 }
 
 .watsonData {

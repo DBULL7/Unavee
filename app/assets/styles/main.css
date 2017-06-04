@@ -144,11 +144,16 @@ body {
   padding-top: 100px;
 }
 
+.search-result-data {
+  width: 40%;
+  text-align: center;
+}
+
 .email {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /*width: 40%;*/
+  width: 40%;
 }
 
 input[name="subject"] {

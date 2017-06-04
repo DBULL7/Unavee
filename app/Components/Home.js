@@ -58,7 +58,6 @@ class Home extends Component {
         console.log(data);
       })
     } else {
-      console.log('not signed in')
       this.setState({logginModal: true, message: 'To Send An Email Sign in or Create an Account'})
     }
   }

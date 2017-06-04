@@ -3,7 +3,7 @@ exports.up = function(knex, Promise) {
   return Promise.all([
     knex.schema.createTable('searches', function(table) {
       table.increments('id').primary()
-      table.string('search')
+      table.string('search').unique()
       table.string('name')
       table.string('organization')
       table.string('title')
@@ -13,12 +13,19 @@ exports.up = function(knex, Promise) {
       table.string('twitter')
 
       table.timestamps()
+    }),
+
+    knex.schema.table('users', function(table) {
+      table.string('email').unique()
     })
   ])
 };
 
 exports.down = function(knex, Promise) {
   return Promise.all([
-    knex.schema.dropTable('searches')
+    knex.schema.dropTable('searches'),
+    knex.schema.table('users', function(table) {
+      table.dropColumn('email')
+    })
   ])
 };

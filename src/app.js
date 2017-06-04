@@ -43,6 +43,7 @@ app.post('/api/v1/users/new', (request, response) => {
   })
   .catch(error => {
     console.log('error', error);
+    response.status(500).json({message: 'that email is taken?'})
   })
 })
 
@@ -145,7 +146,7 @@ app.post('/api/v1/searches/new', (req, res) => {
   .then(response => {
     res.status(200).json({message: 'new search has been added to the database'})
   }).catch(error => {
-    res.send(error)
+    res.status(500).json({message: 'already been searched'})
   })
 })
 

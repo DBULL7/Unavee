@@ -55,7 +55,7 @@ class Home extends Component {
       })
     } else {
       console.log('not signed in')
-      this.setState({logginModal: true})
+      this.setState({logginModal: true, message: 'To Send An Email Sign in or Create an Account'})
     }
   }
 
@@ -227,7 +227,6 @@ class Home extends Component {
   }
 
   save() {
-    console.log(this.props);
     if (this.props.loginUser.id) {
       const { name, picture, twitter, title, organization, location, LinkedIn } = this.state
       fetch('/api/v1/user/favorites/new', {
@@ -248,13 +247,15 @@ class Home extends Component {
       .then(data => {
         console.log(data);
       })
+    } else {
+      this.setState({logginModal: true, message: 'To Save a Search Please Sign in or Create an Account'})
     }
   }
 
   fadeOut() {
     setTimeout(() => {
-      this.setState({logginModal: false})
-    }, 2000)
+      this.setState({logginModal: false, message: ''})
+    }, 3000)
   }
 
   exitPopup() {
@@ -265,7 +266,7 @@ class Home extends Component {
     this.props.history.replace(`/${path}`)
   }
 
-  displayModal() {
+  displayModal(message) {
     if(this.state.logginModal) {
       this.fadeOut()
       return (
@@ -274,7 +275,7 @@ class Home extends Component {
             <button className='popup-exit-button' onClick={() => this.exitPopup()}>&times;</button>
           </div>
           <div>
-            <p className='popup-message'>Login or Create an Account to Favorite Movies</p>
+            <p className='popup-message'>{message}</p>
             <div className='popup-buttons'>
               <button className='login-popup-button' onClick={() => this.navigateTo('Login')}>Login</button>
               <button className='createAccount-popup-button' onClick={() => this.navigateTo('CreateAccount')}>CreateAccount</button>
@@ -285,20 +286,31 @@ class Home extends Component {
     }
   }
 
+  showTwitterWatsonButton() {
+    const { twitter } = this.state
+    if (twitter) {
+      return (
+        <div>
+          <button><a href={`${twitter}`} target="_blank">Twitter</a></button>
+          <button onClick={() => {this.getPersonalityProfle()}}>Watson</button>
+        </div>
+      )
+    }
+  }
+
   conditionalRender() {
     const { name, location, organization, title, twitter, LinkedIn, picture } = this.state
     if (name) {
       return (
         <section>
-          {this.displayModal()}
+          {this.displayModal(this.state.message)}
           <img src={`${picture}`}/>
-          <h4>{name}</h4>
+          <h3>{name}</h3>
           <h4>{title}</h4>
           <h4>{organization}</h4>
           <h4>{location}</h4>
-          <button><a href={`${twitter}`} target="_blank">Twitter</a></button>
           <button><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
-          <button onClick={() => {this.getPersonalityProfle()}}>Watson</button>
+          {this.showTwitterWatsonButton()}
           <button onClick={() => {this.save()}}>Save Search</button>
           <section className="email">
             <input onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>

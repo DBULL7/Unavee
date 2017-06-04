@@ -306,16 +306,18 @@ class Home extends Component {
     const { name, location, organization, title, twitter, LinkedIn, picture } = this.state
     if (name) {
       return (
-        <section>
-          {this.displayModal(this.state.message)}
-          <img src={`${picture}`}/>
-          <h3>{name}</h3>
-          <h4>{title}</h4>
-          <h4>{organization}</h4>
-          <h4>{location}</h4>
-          <button><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
-          {this.showTwitterWatsonButton()}
-          <button onClick={() => {this.save()}}>Save Search</button>
+        <section className='search-results'>
+          <section className='search-result-data'>
+            {this.displayModal(this.state.message)}
+            <img src={`${picture}`}/>
+            <h3>{name}</h3>
+            <h4>{title}</h4>
+            <h4>{organization}</h4>
+            <h4>{location}</h4>
+            <button><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
+            {this.showTwitterWatsonButton()}
+            <button onClick={() => {this.save()}}>Save Search</button>
+          </section>
           <section className="email">
             <input onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
             <textarea onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
@@ -342,10 +344,12 @@ class Home extends Component {
     if(this.state.searched) {
       return (
         <article className="searched">
-          <h1>Unavee</h1>
-          <div>
-            <input value={this.state.input} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
-            <button disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch(); this.clearInput()}}>Enter</button>
+          <h1 className='searched-title'>Unavee</h1>
+          <div className='searched-form'>
+            <div className='searched-bar-container'>
+              <input className='searched-search-bar' value={this.state.input} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
+              {/* <button disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch(); this.clearInput()}}>Enter</button> */}
+            </div>
           </div>
         </article>
       )

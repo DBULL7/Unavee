@@ -26,7 +26,7 @@ export const Navbar = (props) => {
   return (
       <nav className='nav-menu'>
         <ul className='clearfix'>
-          <li><NavLink to='/'>Home</NavLink></li>
+          <li><NavLink to='/'><img className='menu-icon' src='../assets/menu.png'/></NavLink></li>
           {favorites(props)}
         </ul>
       </nav>

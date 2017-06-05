@@ -16,6 +16,7 @@ class Home extends Component {
       emailBody: '',
       saveSuccessMessage: false,
       emailSuccessMessage: false,
+      errorMessage: false,
       search: '',
     }
   }
@@ -60,7 +61,7 @@ class Home extends Component {
       .then(results => results.json())
       .then((data) => {
         console.log(data);
-        this.setState({emailSuccessMessage: true})
+        this.setState({emailSuccessMessage: true, emailBody: '', subject: '', toneAnalysis: ''})
       })
     } else {
       this.setState({logginModal: true, message: 'To Send An Email Sign in or Create an Account'})
@@ -68,16 +69,18 @@ class Home extends Component {
   }
 
   getPersonalityProfle() {
-    this.setState({watsonResults: fakeWatsonData})
-    // fetch('api/v1/watson', {
-    //   method: 'POST',
-    //   headers: {"Content-Type": "application/json"},
-    //   body: JSON.stringify({text: this.state.scrubbedTweets})
-    // }).then(results => results.json())
-    // .then((data) => {
-    //   console.log(data)
-    //   this.setState({watsonResults: data})
-    // })
+    // this.setState({watsonResults: fakeWatsonData})
+    fetch('api/v1/watson', {
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({text: this.state.scrubbedTweets})
+    }).then(results => results.json())
+    .then((data) => {
+      console.log(data)
+      this.setState({watsonResults: data})
+    }).catch(error => {
+      console.log(error);
+    })
   }
 
   scrubTweets(data) {
@@ -136,61 +139,91 @@ class Home extends Component {
 
 
   fullContactAPICall() {
-    // fetch(`/api/v1/user?email=${this.state.input}`, {
-    //   method: "POST",
-    //   headers: {"Content-Type": "application/json"},
-    //   body: JSON.stringify({
-    //     // email: 'dbull@live.com'
-    //     email: this.state.input
-    //   })
-    // })
-    // .then(results => results.json())
-    // .then((data) => {
-    //   console.log(data)
-    // })
-    // }
+    fetch(`/api/v1/user?email=${this.state.input}`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        // email: 'dbull@live.com'
+        email: this.state.input
+      })
+    })
+    .then(results => results.json())
+    .then((data) => {
+      console.log(data)
+      this.scrubSearch(data)
+    }).catch(error => {
+      console.log(error)
+      this.setState({errorMessage: true})
+    })
     // need to save the data to our db
-    this.scrubSearch(fakeData)
+    // this.scrubSearch(fakeData)
   }
 
   scrubSearch(data) {
     const { contactInfo, demographics, socialProfiles, organizations, photos } = data
     let twitter = ''
     let linkedin = ''
-    socialProfiles.forEach(account => {
-      if (account.type === 'twitter') {
-        twitter = account.url
-        this.getTweets(account.id)
-        this.setState({twitter: account.url})
-      } else if (account.type === 'linkedin') {
-        this.setState({LinkedIn: account.url})
-        linkedin = account.url
-      }
-    })
+    if (socialProfiles) {
+      socialProfiles.forEach(account => {
+        if (account.type === 'twitter') {
+          twitter = account.url
+          this.getTweets(account.id)
+          this.setState({twitter: account.url})
+        } else if (account.type === 'linkedin') {
+          this.setState({LinkedIn: account.url})
+          linkedin = account.url
+        }
+      })
+    }
     let picture = ''
-    let photo = photos.forEach(photo => {
-      if(photo.isPrimary) {
-        this.setState({picture: photo.url})
-        picture = photo.url
-      }
-    })
-
+    if (photos) {
+      let photo = photos.forEach(photo => {
+        if(photo.isPrimary) {
+          this.setState({picture: photo.url})
+          picture = photo.url
+        }
+      })
+    }
+    console.log(organizations);
+    if (organizations) {
+      this.setState({organization: organizations[0].name, title: organizations[0].title})
+    }
+    if(demographics) {
+      this.setState({location: demographics.locationGeneral})
+    }
     this.setState({
       name: contactInfo.fullName,
-      organization: organizations[0].name, // need to make this dynamic in case they have more than one org.
-      title: organizations[0].title,
-      location: demographics.locationGeneral,
     })
-
+    const test = (organizations) => {
+      if (organizations) {
+        return organizations[0].title
+      } else {
+        return ''
+      }
+    }
+    const test2 = (organizations) => {
+      if (organizations) {
+        return organizations[0].name
+      } else {
+        return ''
+      }
+    }
+    const location = (demographics) => {
+      if(demographics) {
+        return demographics.locationGeneral
+      } else {
+        return ''
+      }
+    }
     fetch('/api/v1/searches/new', {
       method: 'POST',
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
                             search: this.state.input,
                             name: contactInfo.fullName,
-                            organization: organizations[0].name,
-                            title: organizations[0].title,
-                            location: demographics.locationGeneral,
+                            organization: test2(organizations),
+                            title: test(organizations),
+                            location: location(demographics),
                             picture: picture,
                             LinkedIn: linkedin,
                             twitter: twitter,
@@ -372,8 +405,8 @@ class Home extends Component {
             </div>
           </section>
           <section className="email">
-            <input onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
-            <textarea onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
+            <input value={this.state.subject} onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
+            <textarea value={this.state.emailBody} onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
             <article>
               <button  className='button' onClick={() => {this.sendEmail()}}>Send Email</button>
               <button disabled={!this.checkEmailBody()} className='button' onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
@@ -399,6 +432,27 @@ class Home extends Component {
     }
   }
 
+  errorFadeOut() {
+    setTimeout(() => {
+      this.setState({errorMessage: false})
+    }, 2000)
+  }
+
+  displayErrorMessage() {
+    if(this.state.errorMessage) {
+      this.errorFadeOut()
+      return this.errorMessage()
+    }
+  }
+
+  errorMessage() {
+    return (
+      <div className='error-message-div'>
+        <h4 className='error-message'><span className='error-message-color'>No Results for That Email</span></h4>
+      </div>
+    )
+  }
+
   navBarDisplay() {
     if(this.state.searched) {
       return (
@@ -415,12 +469,13 @@ class Home extends Component {
     }
     return (
       <article className='home-search'>
+        {this.displayErrorMessage()}
         <h1 className='home-title'>Unavee</h1>
         <div className='home-form'>
           <div className='search-bar-container'>
             <input className='home-search-bar' value={this.state.input} onKeyPress={(e) => this.enter(e)} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
           </div>
-          <button className="button" disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch()}}>Search</button>
+          <button id="search-button" className="button" disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch()}}>Search</button>
         </div>
       </article>
     )

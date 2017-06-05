@@ -31,7 +31,7 @@ describe('Create Account Tests', () => {
     expect(state.node.state.email).toEqual('')
     expect(state.node.state.password).toEqual('')
     expect(state.node.state.retypedPassword).toEqual('')
-    expect(state.node.state.emailTaken).toEqual(false)
+    expect(state.node.state.error).toEqual(false)
   })
 
   it('should should create an account', () => {
@@ -50,7 +50,7 @@ describe('Create Account Tests', () => {
     expect(state.node.state.name).toEqual('Jhun')
     expect(state.node.state.password).toEqual('lit')
     button.simulate('click')
-    expect(state.node.state.emailTaken).toEqual(false)
+    expect(state.node.state.error).toEqual(false)
   })
 
 

@@ -107,6 +107,8 @@ class Home extends Component {
       console.log(data)
       this.scrubTweets(data)
       this.setState({lookedUpTweets: data})
+    }).catch(error => {
+      console.log(error)
     })
   }
 
@@ -135,6 +137,7 @@ class Home extends Component {
                     LinkedIn: LinkedIn,
                     twitter: twitter
                   })
+    this.getTweets(twitter)
   }
 
 

@@ -12,7 +12,11 @@ class Home extends Component {
       input: '',
       searched: false,
       scrubbedTweets: { "contentItems": []},
-      logginModal: false
+      logginModal: false,
+      emailBody: '',
+      saveSuccessMessage: false,
+      emailSuccessMessage: false,
+      search: '',
     }
   }
 
@@ -47,7 +51,7 @@ class Home extends Component {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-          email: `${this.state.input}`,
+          email: `${this.state.search}`,
           from: `${this.props.loginUser.email}`,
           subject: `${this.state.subject}`,
           content: `${this.state.emailBody}`
@@ -56,6 +60,7 @@ class Home extends Component {
       .then(results => results.json())
       .then((data) => {
         console.log(data);
+        this.setState({emailSuccessMessage: true})
       })
     } else {
       this.setState({logginModal: true, message: 'To Send An Email Sign in or Create an Account'})
@@ -109,6 +114,7 @@ class Home extends Component {
     .then(data => {
       console.log(data)
       this.databaseSearchResult(data)
+      this.setState({search: search})
       this.clearInput()
     }).catch(error => {
       console.log(error)
@@ -200,7 +206,7 @@ class Home extends Component {
   displayToneAnalysis() {
     if(this.state.toneAnalysis) {
       const { tone_categories } = this.state.toneAnalysis.document_tone
-      let test = (categoryName) => {
+      let emoticon = (categoryName) => {
         switch (categoryName) {
           case 'Anger':
             return '😡'
@@ -220,7 +226,7 @@ class Home extends Component {
         if (category.score > .5) {
           return (
             <div>
-              <p>{test(category.tone_name)}</p>
+              <p>{emoticon(category.tone_name)}</p>
               <p>Probability: {Math.round(category.score*100)}%</p>
             </div>
           )
@@ -257,6 +263,7 @@ class Home extends Component {
       }).then(res => res.json())
       .then(data => {
         console.log(data);
+        this.setState({saveSuccessMessage: true})
       })
     } else {
       this.setState({logginModal: true, message: 'To Save a Search Please Sign in or Create an Account'})
@@ -309,6 +316,43 @@ class Home extends Component {
     }
   }
 
+  checkEmailBody() {
+    return (this.state.emailBody !== '')
+  }
+
+  successFadeOut() {
+    setTimeout(() => {
+      this.setState({emailSuccessMessage: false, saveSuccessMessage: false})
+    }, 2500)
+  }
+
+  displaySuccessMessage() {
+    if(this.state.emailSuccessMessage) {
+      this.successFadeOut()
+      return this.emailSuccessMessage()
+    }
+    else if(this.state.saveSuccessMessage) {
+      this.successFadeOut()
+      return this.saveSuccessMessage()
+    }
+  }
+
+  emailSuccessMessage() {
+    return (
+      <div className='success-message-div'>
+        <h4 className='success-message'><span className='success-message-color'>Email Sent!</span></h4>
+      </div>
+    )
+  }
+
+  saveSuccessMessage() {
+    return (
+      <div className='success-message-div'>
+        <h4 className='success-message'><span className='success-message-color'>Saved!</span></h4>
+      </div>
+    )
+  }
+
   conditionalRender() {
     const { name, location, organization, title, twitter, LinkedIn, picture } = this.state
     if (name) {
@@ -331,8 +375,8 @@ class Home extends Component {
             <input onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
             <textarea onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
             <article>
-              <button className='button' onClick={() => {this.sendEmail()}}>Send Email</button>
-              <button className='button' onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
+              <button  className='button' onClick={() => {this.sendEmail()}}>Send Email</button>
+              <button disabled={!this.checkEmailBody()} className='button' onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
               {this.displayToneAnalysis()}
             </article>
           </section>
@@ -361,9 +405,9 @@ class Home extends Component {
         <article className="searched">
           <h1 className='searched-title'>Unavee</h1>
           <div className='searched-form'>
+            {this.displaySuccessMessage()}
             <div className='searched-bar-container'>
               <input className='searched-search-bar' value={this.state.input} onKeyPress={(e) => this.enter(e)} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
-              {/* <button disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch(); this.clearInput()}}>Enter</button> */}
             </div>
           </div>
         </article>

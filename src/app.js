@@ -43,7 +43,7 @@ app.post('/api/v1/users/new', (request, response) => {
   })
   .catch(error => {
     console.log('error', error);
-    response.status(500).json({message: 'that email is taken?'})
+    response.sendStatus(500)
   })
 })
 

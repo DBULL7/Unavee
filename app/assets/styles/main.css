@@ -24,6 +24,9 @@ a {
 }
 
 .home-search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding-top: 180px;
   text-align: center;
 }

@@ -97,6 +97,7 @@ class Home extends Component {
   }
 
   getTweets(twitterID) {
+    console.log(twitterID)
     fetch('api/v1/tweets', {
       method: 'POST',
       headers: {"Content-Type": "application/json"},
@@ -128,16 +129,17 @@ class Home extends Component {
   }
 
   databaseSearchResult(data) {
-    const { name, organization, title, location, picture, LinkedIn, twitter } = data[0]
+    const { name, organization, title, location, picture, LinkedIn, twitter, twitterID } = data[0]
     this.setState({ name: name,
                     organization: organization,
                     title: title,
                     location: location,
                     picture: picture,
                     LinkedIn: LinkedIn,
-                    twitter: twitter
+                    twitter: twitter,
+                    twitterID: twitterID
                   })
-    this.getTweets(twitter)
+    this.getTweets(twitterID)
   }
 
 
@@ -166,10 +168,12 @@ class Home extends Component {
     const { contactInfo, demographics, socialProfiles, organizations, photos } = data
     let twitter = ''
     let linkedin = ''
+    let twitterID = ''
     if (socialProfiles) {
       socialProfiles.forEach(account => {
         if (account.type === 'twitter') {
           twitter = account.url
+          twitterID = account.id
           this.getTweets(account.id)
           this.setState({twitter: account.url})
         } else if (account.type === 'linkedin') {
@@ -230,6 +234,7 @@ class Home extends Component {
                             picture: picture,
                             LinkedIn: linkedin,
                             twitter: twitter,
+                            twitterID: twitterID
       })
     }).then(res => res.json())
     .then(data => {

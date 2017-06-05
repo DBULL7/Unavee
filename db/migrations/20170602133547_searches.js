@@ -11,6 +11,7 @@ exports.up = function(knex, Promise) {
       table.string('picture')
       table.string('LinkedIn')
       table.string('twitter')
+      table.string('twitterID')
 
       table.timestamps()
     }),

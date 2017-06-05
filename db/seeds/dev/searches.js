@@ -10,7 +10,9 @@ exports.seed = function(knex, Promise) {
                                 location: 'Lawrence, Kansas, United States',
                                 picture: 'picture',
                                 LinkedIn: 'https://www.linkedin.com/in/jdevonbull',
-                                twitter: "https://twitter.com/Devon_Bull"
+                                twitter: "https://twitter.com/Devon_Bull",
+                                twitterID: '1214005273'
+
                               }),
       ])
     });

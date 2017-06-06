@@ -5,6 +5,7 @@ import CreateAccountContainer from './CreateAccountContainer'
 import LoginContainer from './LoginContainer'
 import NavbarContainer from './NavbarContainer'
 import FavoritesContainer from './FavoritesContainer'
+import Search from './Search'
 
 class App extends Component {
   render() {
@@ -23,8 +24,12 @@ class App extends Component {
           <Route exact path='/Login' history={this.props.history} render={() => {
             return <LoginContainer history={this.props.history}/>
           }}/>
-          <Route exact path='/' history={this.props.history} render={() => {
+          <Route exact path='/Home' history={this.props.history} render={() => {
             return <HomeContainer history={this.props.history}/>
+          }}/>
+
+          <Route exact path='/' render={() => {
+            return <Search history={this.props.history}/>
           }}/>
         </Switch>
       </section>

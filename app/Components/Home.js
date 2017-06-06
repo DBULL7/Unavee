@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import fakeData from '../dbullData.js'
 import fakeWatsonData from '../fakeWatsonData.js'
 import { WatsonData } from './WatsonData'
-
+import { checkDatabaseForSearch } from './Helpers/HomeHelper'
 
 class Home extends Component {
   constructor(props) {
@@ -19,12 +19,6 @@ class Home extends Component {
       search: '',
     }
   }
-
-  // componentWillMount() {
-  //   // console.log('fired');
-  //
-  //
-  // }
 
   checkInput() {
     return (this.state.input !== '')
@@ -68,7 +62,6 @@ class Home extends Component {
   }
 
   getPersonalityProfle() {
-    // this.setState({watsonResults: fakeWatsonData})
     fetch('api/v1/watson', {
       method: 'POST',
       headers: {"Content-Type": "application/json"},
@@ -82,167 +75,10 @@ class Home extends Component {
     })
   }
 
-  scrubTweets(data) {
-    console.log(data);
-    data.forEach((tweet) => {
-      this.state.scrubbedTweets.contentItems.push({
-        "content": tweet.text,
-        "contenttype": "text/plain",
-        "id": tweet.id,
-        "language": "en"
-      })
-    })
-    console.log(this.state.scrubbedTweets.contentItems);
+  helper() {
+    checkDatabaseForSearch(this.state.input, this.setState.bind(this), this.state.scrubbedTweets)
+    this.clearInput()
   }
-
-  getTweets(twitterID) {
-    if(twitterID) {
-      fetch('api/v1/tweets', {
-        method: 'POST',
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({id: twitterID})
-      })
-      .then(results => results.json())
-      .then((data) => {
-        console.log(data)
-        this.scrubTweets(data)
-        this.setState({lookedUpTweets: data})
-      }).catch(error => {
-        console.log(error)
-      })
-    }
-  }
-
-  checkDatabaseForSearch() {
-    const search = this.state.input
-    fetch(`/api/v1/${search}`)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data)
-      this.databaseSearchResult(data)
-      this.setState({search: search})
-      this.clearInput()
-    }).catch(error => {
-      console.log(error)
-      this.fullContactAPICall()
-    })
-  }
-
-  databaseSearchResult(data) {
-    const { name, organization, title, location, picture, LinkedIn, twitter, twitterID } = data[0]
-    this.setState({ name: name,
-                    organization: organization,
-                    title: title,
-                    location: location,
-                    picture: picture,
-                    LinkedIn: LinkedIn,
-                    twitter: twitter,
-                    twitterID: twitterID
-                  })
-    this.getTweets(twitterID)
-  }
-
-
-  fullContactAPICall() {
-    fetch(`/api/v1/user?email=${this.state.input}`, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        // email: 'dbull@live.com'
-        email: this.state.input
-      })
-    })
-    .then(results => results.json())
-    .then((data) => {
-      console.log(data)
-      this.scrubSearch(data)
-    }).catch(error => {
-      console.log(error)
-      this.setState({errorMessage: true})
-    })
-    // need to save the data to our db
-    // this.scrubSearch(fakeData)
-  }
-
-  scrubSearch(data) {
-    const { contactInfo, demographics, socialProfiles, organizations, photos } = data
-    let twitter = ''
-    let linkedin = ''
-    let twitterID = ''
-    if (socialProfiles) {
-      socialProfiles.forEach(account => {
-        if (account.type === 'twitter') {
-          twitter = account.url
-          twitterID = account.id
-          this.getTweets(account.id)
-          this.setState({twitter: account.url})
-        } else if (account.type === 'linkedin') {
-          this.setState({LinkedIn: account.url})
-          linkedin = account.url
-        }
-      })
-    }
-    let picture = ''
-    if (photos) {
-      let photo = photos.forEach(photo => {
-        if(photo.isPrimary) {
-          this.setState({picture: photo.url})
-          picture = photo.url
-        }
-      })
-    }
-    console.log(organizations);
-    if (organizations) {
-      this.setState({organization: organizations[0].name, title: organizations[0].title})
-    }
-    if(demographics) {
-      this.setState({location: demographics.locationGeneral})
-    }
-    this.setState({
-      name: contactInfo.fullName,
-    })
-    const test = (organizations) => {
-      if (organizations) {
-        return organizations[0].title
-      } else {
-        return ''
-      }
-    }
-    const test2 = (organizations) => {
-      if (organizations) {
-        return organizations[0].name
-      } else {
-        return ''
-      }
-    }
-    const location = (demographics) => {
-      if(demographics) {
-        return demographics.locationGeneral
-      } else {
-        return ''
-      }
-    }
-    fetch('/api/v1/searches/new', {
-      method: 'POST',
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-                            search: this.state.input,
-                            name: contactInfo.fullName,
-                            organization: test2(organizations),
-                            title: test(organizations),
-                            location: location(demographics),
-                            picture: picture,
-                            LinkedIn: linkedin,
-                            twitter: twitter,
-                            twitterID: twitterID
-      })
-    }).then(res => res.json())
-    .then(data => {
-      console.log(data)
-      this.clearInput()
-    })
-  }
-
 
   displayToneAnalysis() {
     if(this.state.toneAnalysis) {
@@ -449,7 +285,7 @@ class Home extends Component {
 
   enter(event) {
     if(event.key === 'Enter' && this.checkInput()) {
-      this.checkDatabaseForSearch()
+      this.helper()
     }
   }
 
@@ -475,7 +311,6 @@ class Home extends Component {
   }
 
   navBarDisplay() {
-    if(this.state.search) {
       return (
         <article className="searched">
           <h1 className='searched-title'>Unavee</h1>
@@ -488,19 +323,6 @@ class Home extends Component {
           </div>
         </article>
       )
-    }
-    return (
-      <article className='home-search'>
-        {this.displayErrorMessage()}
-        <h1 className='home-title'>Unavee</h1>
-        <div className='home-form'>
-          <div className='search-bar-container'>
-            <input className='home-search-bar' value={this.state.input} onKeyPress={(e) => this.enter(e)} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
-          </div>
-          <button id="search-button" className="button" disabled={!this.checkInput()} onClick={() => {this.checkDatabaseForSearch()}}>Search</button>
-        </div>
-      </article>
-    )
   }
 
   render() {

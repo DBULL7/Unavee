@@ -10,3 +10,10 @@ export const logout = (user) => {
     type: 'LOGOUT'
   }
 }
+
+export const searchResults = (searchResults) => {
+  return {
+    type: 'SEARCH_RESULTS',
+    searchResults
+  }
+}

@@ -1,12 +1,9 @@
 import { connect } from 'react-redux'
-import Home from './Home'
+import Search from './Search'
 import { searchResults } from '../actions/index'
 
-const mapStateToProps = (state) => {
-  return state
-}
 
-const mapDispatchToProps = (dispatch) => {
+const dispatchMapStateToProps = (dispatch) => {
   return {
     handleSearchResult: (search) => {
       return dispatch(searchResults(search))
@@ -14,4 +11,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(null, dispatchMapStateToProps)(Search)

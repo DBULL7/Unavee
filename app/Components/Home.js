@@ -10,7 +10,6 @@ class Home extends Component {
     super(props)
     this.state = {
       input: '',
-      searched: false,
       scrubbedTweets: { "contentItems": []},
       logginModal: false,
       emailBody: '',
@@ -97,20 +96,21 @@ class Home extends Component {
   }
 
   getTweets(twitterID) {
-    console.log(twitterID)
-    fetch('api/v1/tweets', {
-      method: 'POST',
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({id: twitterID})
-    })
-    .then(results => results.json())
-    .then((data) => {
-      console.log(data)
-      this.scrubTweets(data)
-      this.setState({lookedUpTweets: data})
-    }).catch(error => {
-      console.log(error)
-    })
+    if(twitterID) {
+      fetch('api/v1/tweets', {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({id: twitterID})
+      })
+      .then(results => results.json())
+      .then((data) => {
+        console.log(data)
+        this.scrubTweets(data)
+        this.setState({lookedUpTweets: data})
+      }).catch(error => {
+        console.log(error)
+      })
+    }
   }
 
   checkDatabaseForSearch() {
@@ -286,7 +286,7 @@ class Home extends Component {
 
   save() {
     if (this.props.loginUser.id) {
-      const { name, picture, twitter, title, organization, location, LinkedIn } = this.state
+      const { name, picture, twitter, title, organization, location, LinkedIn, twitterID } = this.state
       fetch('/api/v1/user/favorites/new', {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
@@ -294,6 +294,7 @@ class Home extends Component {
           name: name,
           picture: picture,
           twitter: twitter,
+          twitterID: twitterID,
           title: title,
           organizations: organization,
           location: location,
@@ -394,6 +395,18 @@ class Home extends Component {
     )
   }
 
+  loggedInAndEmailBody() {
+    if (this.props.loginUser.id) {
+      return (this.checkEmailBody())
+    }
+  }
+
+  checkIfLoggedIn() {
+    if (this.props.loginUser.id) {
+      return true
+    }
+  }
+
   conditionalRender() {
     const { name, location, organization, title, twitter, LinkedIn, picture } = this.state
     if (name) {
@@ -409,14 +422,14 @@ class Home extends Component {
             <div className='social-media-buttons'>
               <button className='button'><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
               {this.showTwitterWatsonButton()}
-              <button className='button' onClick={() => {this.save()}}>Save Search</button>
+              <button disabled={!this.checkIfLoggedIn()} className='button' onClick={() => {this.save()}}>Save Search</button>
             </div>
           </section>
           <section className="email">
             <input value={this.state.subject} onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
             <textarea value={this.state.emailBody} onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
             <article>
-              <button  className='button' onClick={() => {this.sendEmail()}}>Send Email</button>
+              <button  disabled={!this.loggedInAndEmailBody()} className='button' onClick={() => {this.sendEmail()}}>Send Email</button>
               <button disabled={!this.checkEmailBody()} className='button' onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
               {this.displayToneAnalysis()}
             </article>
@@ -431,7 +444,7 @@ class Home extends Component {
   }
 
   clearInput() {
-    this.setState({input: '', searched: true})
+    this.setState({input: ''})
   }
 
   enter(event) {
@@ -462,12 +475,13 @@ class Home extends Component {
   }
 
   navBarDisplay() {
-    if(this.state.searched) {
+    if(this.state.search) {
       return (
         <article className="searched">
           <h1 className='searched-title'>Unavee</h1>
           <div className='searched-form'>
             {this.displaySuccessMessage()}
+            {this.displayErrorMessage()}
             <div className='searched-bar-container'>
               <input className='searched-search-bar' value={this.state.input} onKeyPress={(e) => this.enter(e)} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
             </div>

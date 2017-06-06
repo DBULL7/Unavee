@@ -190,6 +190,7 @@ textarea[name="email-body"] {
 }
 
 .results-pic {
+  width: 250px;
   border-radius: 50%;
 }
 

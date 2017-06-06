@@ -26,6 +26,7 @@ class Login extends Component {
         console.log(data);
         const {email, id, name} = data[0]
         this.props.handleLoginUser({id: id, email: email, name: name})
+        this.props.history.replace('/')
       }).catch(error => {
         console.log(error);
         this.setState({error: true})

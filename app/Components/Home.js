@@ -265,7 +265,7 @@ class Home extends Component {
             <input value={this.state.subject} onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
             <textarea value={this.state.emailBody} onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
             <article>
-              <button  disabled={!this.loggedInAndEmailBody()} className='button' onClick={() => {this.sendEmail()}}>Send Email</button>
+              <button  className='button' onClick={() => {this.sendEmail()}}>Send Email</button>
               <button disabled={!this.checkEmailBody()} className='button' onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
               {this.displayToneAnalysis()}
             </article>

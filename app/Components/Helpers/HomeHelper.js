@@ -1,15 +1,15 @@
- export const checkDatabaseForSearch = (search, setState, scrubbedTweets, handleSearchResult) => {
+ export const checkDatabaseForSearch = (search, setState, handleSearchResult, handleTweets) => {
   fetch(`/api/v1/${search}`)
   .then(res => res.json())
   .then(data => {
-    databaseSearchResult(data, setState, scrubbedTweets, handleSearchResult)
+    databaseSearchResult(data, setState, handleSearchResult, handleTweets)
     setState({search: search})
   }).catch(error => {
-    fullContactAPICall(search, setState, scrubbedTweets, handleSearchResult)
+    fullContactAPICall(search, setState, handleSearchResult, handleTweets)
   })
 }
 
-const databaseSearchResult = (data, setState, scrubbedTweets, handleSearchResult) => {
+const databaseSearchResult = (data, setState, handleSearchResult, handleTweets) => {
   const { name, organization, title, location, picture, LinkedIn, twitter, twitterID } = data[0]
   setState({ name: name,
                   organization: organization,
@@ -20,7 +20,7 @@ const databaseSearchResult = (data, setState, scrubbedTweets, handleSearchResult
                   twitter: twitter,
                   twitterID: twitterID
                 })
-  getTweets(twitterID, setState, scrubbedTweets)
+  getTweets(twitterID, setState, handleTweets)
   handleSearchResult({name: name,
                       organization: organization,
                       title: title,
@@ -33,7 +33,7 @@ const databaseSearchResult = (data, setState, scrubbedTweets, handleSearchResult
 }
 
 
-const fullContactAPICall = (search, setState, scrubbedTweets, handleSearchResult) => {
+const fullContactAPICall = (search, setState, handleSearchResult, handleTweets) => {
   fetch(`/api/v1/user?email=${search}`, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
@@ -43,13 +43,13 @@ const fullContactAPICall = (search, setState, scrubbedTweets, handleSearchResult
   })
   .then(results => results.json())
   .then((data) => {
-    scrubSearch(data, setState, scrubbedTweets, search, handleSearchResult)
+    scrubSearch(data, setState, search, handleSearchResult, handleTweets)
   }).catch(error => {
     setState({errorMessage: true})
   })
 }
 
-const scrubSearch = (data, setState, scrubbedTweets, search, handleSearchResult) => {
+const scrubSearch = (data, setState, search, handleSearchResult, handleTweets) => {
   const { contactInfo, demographics, socialProfiles, organizations, photos } = data
   let twitter = ''
   let linkedin = ''
@@ -59,7 +59,7 @@ const scrubSearch = (data, setState, scrubbedTweets, search, handleSearchResult)
       if (account.type === 'twitter') {
         twitter = account.url
         twitterID = account.id
-        getTweets(account.id, scrubbedTweets)
+        getTweets(account.id, handleTweets)
         setState({twitter: account.url})
       } else if (account.type === 'linkedin') {
         setState({LinkedIn: account.url})
@@ -137,7 +137,7 @@ const scrubSearch = (data, setState, scrubbedTweets, search, handleSearchResult)
   })
 }
 
-const getTweets = (twitterID, setState, scrubbedTweets) => {
+const getTweets = (twitterID, setState, handleTweets) => {
   if(twitterID) {
     fetch('api/v1/tweets', {
       method: 'POST',
@@ -146,7 +146,7 @@ const getTweets = (twitterID, setState, scrubbedTweets) => {
     })
     .then(results => results.json())
     .then((data) => {
-      scrubTweets(data, scrubbedTweets)
+      scrubTweets(data, handleTweets)
       setState({lookedUpTweets: data})
     }).catch(error => {
 
@@ -154,8 +154,8 @@ const getTweets = (twitterID, setState, scrubbedTweets) => {
   }
 }
 
-const scrubTweets = (data, scrubbedTweets) => {
-
+const scrubTweets = (data, handleTweets) => {
+  const scrubbedTweets = { "contentItems": []}
   data.forEach((tweet) => {
     scrubbedTweets.contentItems.push({
       "content": tweet.text,
@@ -164,4 +164,5 @@ const scrubTweets = (data, scrubbedTweets) => {
       "language": "en"
     })
   })
+  handleTweets(scrubbedTweets)
 }

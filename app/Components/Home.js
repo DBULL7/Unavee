@@ -10,7 +10,6 @@ class Home extends Component {
     super(props)
     this.state = {
       input: '',
-      scrubbedTweets: { "contentItems": []},
       logginModal: false,
       emailBody: '',
       saveSuccessMessage: false,
@@ -65,7 +64,7 @@ class Home extends Component {
     fetch('api/v1/watson', {
       method: 'POST',
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({text: this.state.scrubbedTweets})
+      body: JSON.stringify({text: this.props.getTweets})
     }).then(results => results.json())
     .then((data) => {
       console.log(data)
@@ -76,7 +75,7 @@ class Home extends Component {
   }
 
   helper() {
-    checkDatabaseForSearch(this.state.input, this.setState.bind(this), this.state.scrubbedTweets, this.props.handleSearchResult.bind(this))
+    checkDatabaseForSearch(this.state.input, this.setState.bind(this), this.props.handleSearchResult.bind(this), this.props.handleTweets.bind(this))
     this.clearInput()
   }
 
@@ -183,7 +182,7 @@ class Home extends Component {
   }
 
   showTwitterWatsonButton() {
-    const { twitter } = this.state
+    const { twitter } = this.props.search
     if (twitter) {
       return (
         <div>

@@ -1,8 +1,7 @@
 import React from 'react'
 import { NavLink, Switch, Route } from 'react-router-dom'
 
-
-export const Navbar = (props) => {
+export const SearchNavbar = (props) => {
   const test = () => {
     this.props.handleLogout()
   }
@@ -24,14 +23,11 @@ export const Navbar = (props) => {
     )
   }
   return (
-    <section className='nav-bar'>
-      <NavLink to='/' className='global-home-link'>Unavee</NavLink>
-      <nav className='nav-menu'>
-        <ul className='clearfix'>
-          <li><img className='menu-icon' src='../assets/menu.png'/></li>
-          {favorites(props)}
-        </ul>
-      </nav>
-    </section>
+    <nav className='nav-menu'>
+      <ul className='clearfix'>
+        <li><img className='menu-icon' src='../assets/menu.png'/></li>
+        {favorites(props)}
+      </ul>
+    </nav>
   )
 }

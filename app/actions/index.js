@@ -17,3 +17,10 @@ export const searchResults = (searchResults) => {
     searchResults
   }
 }
+
+export const storeTweets = (tweets) => {
+  return {
+    type: 'GET_TWEETS',
+    tweets
+  }
+}

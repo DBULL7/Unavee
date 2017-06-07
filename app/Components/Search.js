@@ -8,12 +8,11 @@ class Search extends Component {
     super(props)
     this.state = {
       search: '',
-      scrubbedTweets: { "contentItems": []},
     }
   }
 
   helper() {
-    checkDatabaseForSearch(this.state.search, this.setState.bind(this), this.state.scrubbedTweets, this.props.handleSearchResult.bind(this))
+    checkDatabaseForSearch(this.state.search, this.setState.bind(this), this.props.handleSearchResult.bind(this), this.props.handleTweets.bind(this))
     this.props.history.replace('/Home')
   }
 

@@ -13,7 +13,7 @@ class Search extends Component {
   }
 
   helper() {
-    checkDatabaseForSearch(this.state.search, this.setState.bind(this), this.state.scrubbedTweets)
+    checkDatabaseForSearch(this.state.search, this.setState.bind(this), this.state.scrubbedTweets, this.props.handleSearchResult.bind(this))
     this.props.history.replace('/Home')
   }
 

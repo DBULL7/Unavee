@@ -1,17 +1,15 @@
- export const checkDatabaseForSearch = (search, setState, scrubbedTweets) => {
+ export const checkDatabaseForSearch = (search, setState, scrubbedTweets, handleSearchResult) => {
   fetch(`/api/v1/${search}`)
   .then(res => res.json())
   .then(data => {
-    console.log(data)
-    databaseSearchResult(data, setState, scrubbedTweets)
+    databaseSearchResult(data, setState, scrubbedTweets, handleSearchResult)
     setState({search: search})
   }).catch(error => {
-    console.log(error)
-    fullContactAPICall(search, setState, scrubbedTweets)
+    fullContactAPICall(search, setState, scrubbedTweets, handleSearchResult)
   })
 }
 
-const databaseSearchResult = (data, setState, scrubbedTweets) => {
+const databaseSearchResult = (data, setState, scrubbedTweets, handleSearchResult) => {
   const { name, organization, title, location, picture, LinkedIn, twitter, twitterID } = data[0]
   setState({ name: name,
                   organization: organization,
@@ -23,10 +21,19 @@ const databaseSearchResult = (data, setState, scrubbedTweets) => {
                   twitterID: twitterID
                 })
   getTweets(twitterID, setState, scrubbedTweets)
+  handleSearchResult({name: name,
+                      organization: organization,
+                      title: title,
+                      location: location,
+                      picture: picture,
+                      LinkedIn: LinkedIn,
+                      twitter: twitter,
+                      twitterID: twitterID
+                    })
 }
 
 
-const fullContactAPICall = (search, setState, scrubbedTweets) => {
+const fullContactAPICall = (search, setState, scrubbedTweets, handleSearchResult) => {
   fetch(`/api/v1/user?email=${search}`, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
@@ -36,15 +43,13 @@ const fullContactAPICall = (search, setState, scrubbedTweets) => {
   })
   .then(results => results.json())
   .then((data) => {
-    console.log(data)
-    scrubSearch(data, setState, scrubbedTweets, search)
+    scrubSearch(data, setState, scrubbedTweets, search, handleSearchResult)
   }).catch(error => {
-    console.log(error)
     setState({errorMessage: true})
   })
 }
 
-const scrubSearch = (data, setState, scrubbedTweets, search) => {
+const scrubSearch = (data, setState, scrubbedTweets, search, handleSearchResult) => {
   const { contactInfo, demographics, socialProfiles, organizations, photos } = data
   let twitter = ''
   let linkedin = ''
@@ -81,35 +86,45 @@ const scrubSearch = (data, setState, scrubbedTweets, search) => {
   setState({
     name: contactInfo.fullName,
   })
-  const test = (organizations) => {
+  const organizationTitle = (organizations) => {
     if (organizations) {
       return organizations[0].title
     } else {
       return ''
     }
   }
-  const test2 = (organizations) => {
+  const organizationName = (organizations) => {
     if (organizations) {
       return organizations[0].name
-    } else {
-      return ''
     }
+    return ''
+
   }
   const location = (demographics) => {
     if(demographics) {
       return demographics.locationGeneral
-    } else {
-      return ''
     }
+    return ''
   }
+  handleSearchResult({
+                      name: contactInfo.fullName,
+                      organization: organizationName(organizations),
+                      title: organizationTitle(organizations),
+                      location: location(demographics),
+                      picture: picture,
+                      LinkedIn: LinkedIn,
+                      twitter: twitter,
+                      twitterID: twitterID
+                    })
+
   fetch('/api/v1/searches/new', {
     method: 'POST',
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
                           search: search,
                           name: contactInfo.fullName,
-                          organization: test2(organizations),
-                          title: test(organizations),
+                          organization: organizationName(organizations),
+                          title: organizationTitle(organizations),
                           location: location(demographics),
                           picture: picture,
                           LinkedIn: linkedin,
@@ -118,7 +133,7 @@ const scrubSearch = (data, setState, scrubbedTweets, search) => {
     })
   }).then(res => res.json())
   .then(data => {
-    console.log(data)
+
   })
 }
 
@@ -131,17 +146,16 @@ const getTweets = (twitterID, setState, scrubbedTweets) => {
     })
     .then(results => results.json())
     .then((data) => {
-      console.log(data)
       scrubTweets(data, scrubbedTweets)
       setState({lookedUpTweets: data})
     }).catch(error => {
-      console.log(error)
+
     })
   }
 }
 
 const scrubTweets = (data, scrubbedTweets) => {
-  console.log(data);
+
   data.forEach((tweet) => {
     scrubbedTweets.contentItems.push({
       "content": tweet.text,
@@ -150,5 +164,4 @@ const scrubTweets = (data, scrubbedTweets) => {
       "language": "en"
     })
   })
-  console.log(scrubbedTweets.contentItems);
 }

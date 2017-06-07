@@ -76,7 +76,7 @@ class Home extends Component {
   }
 
   helper() {
-    checkDatabaseForSearch(this.state.input, this.setState.bind(this), this.state.scrubbedTweets)
+    checkDatabaseForSearch(this.state.input, this.setState.bind(this), this.state.scrubbedTweets, this.props.handleSearchResult.bind(this))
     this.clearInput()
   }
 
@@ -244,7 +244,7 @@ class Home extends Component {
   }
 
   conditionalRender() {
-    const { name, location, organization, title, twitter, LinkedIn, picture } = this.state
+    const { name, location, organization, title, twitter, LinkedIn, picture } = this.props.search
     if (name) {
       return (
         <section className='search-results'>

@@ -6,30 +6,54 @@ import LoginContainer from './LoginContainer'
 import NavbarContainer from './NavbarContainer'
 import FavoritesContainer from './FavoritesContainer'
 import SearchContainer from './SearchContainer'
+import SearchNavbarContainer from './SearchNavbarContainer'
 
 class App extends Component {
   render() {
     return (
       <section>
-        <NavbarContainer history={this.props.history}/>
+
         <Switch>
-          <Route exact history={this.props.history} path='/Favorites' render={() => {
-            return <FavoritesContainer history={this.props.history}/>
-          }}/>
-          <Route exact path='/CreateAccount' history={this.props.history} render={() => {
+          <Route exact path='/Favorites' render={() => {
             return (
-              <CreateAccountContainer history={this.props.history}/>
+              <section>
+                <NavbarContainer history={this.props.history}/>
+                <FavoritesContainer history={this.props.history}/>
+              </section>
             )
           }}/>
-          <Route exact path='/Login' history={this.props.history} render={() => {
-            return <LoginContainer history={this.props.history}/>
+          <Route exact path='/CreateAccount'  render={() => {
+            return (
+              <section>
+                <NavbarContainer history={this.props.history}/>
+                <CreateAccountContainer history={this.props.history}/>
+              </section>
+            )
           }}/>
-          <Route exact path='/Home' history={this.props.history} render={() => {
-            return <HomeContainer history={this.props.history}/>
+          <Route exact path='/Login' render={() => {
+            return (
+              <section>
+                <NavbarContainer history={this.props.history}/>
+                <LoginContainer history={this.props.history}/>
+              </section>
+            )
+          }}/>
+          <Route exact path='/Home' render={() => {
+            return (
+              <section>
+                {/* <NavbarContainer history={this.props.history}/> */}
+                <HomeContainer history={this.props.history}/>
+              </section>
+            )
           }}/>
 
           <Route exact path='/' render={() => {
-            return <SearchContainer history={this.props.history}/>
+            return (
+              <section>
+                <SearchNavbarContainer history={this.props.history}/>
+                <SearchContainer history={this.props.history}/>
+              </section>
+            )
           }}/>
         </Switch>
       </section>

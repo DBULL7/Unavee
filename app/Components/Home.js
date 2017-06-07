@@ -4,6 +4,7 @@ import fakeData from '../dbullData.js'
 import fakeWatsonData from '../fakeWatsonData.js'
 import { WatsonData } from './WatsonData'
 import { checkDatabaseForSearch } from './Helpers/HomeHelper'
+import { NavLink } from 'react-router-dom'
 
 class Home extends Component {
   constructor(props) {
@@ -309,27 +310,50 @@ class Home extends Component {
     )
   }
 
+  links(login) {
+    if (!login.name) {
+      return (
+        <ul className='home-sub-menu'>
+          <li><NavLink to='/Login'>Login</NavLink></li>
+          <li><NavLink to='/CreateAccount'>CreateAccount</NavLink></li>
+        </ul>
+      )
+    }
+    return (
+      <ul className='home-sub-menu'>
+        <li><NavLink to='/Favorites'>Favorites</NavLink></li>
+        <li><NavLink to='/' onClick={() => test()}>Logout</NavLink></li>
+      </ul>
+    )
+  }
+
   navBarDisplay() {
       return (
         <article className="searched">
-          <h1 className='searched-title'>Unavee</h1>
-          <div className='searched-form'>
             {this.displaySuccessMessage()}
             {this.displayErrorMessage()}
             <div className='searched-bar-container'>
+              <NavLink to='/' className='global-home-link'>Unavee</NavLink>
               <input className='searched-search-bar' value={this.state.input} onKeyPress={(e) => this.enter(e)} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>
+              <nav className='home-menu'>
+                <ul className='home-hamburger'>
+                  <li><img className='menu-icon' src='../assets/menu.png'/></li>
+                  {this.links(this.props.loginUser)}
+                </ul>
+              </nav>
             </div>
-          </div>
         </article>
       )
   }
 
   render() {
     return (
-      <section>
+      <section className="searched-page">
         {this.navBarDisplay()}
-        {this.conditionalRender()}
-        <WatsonData watson={this.state.watsonResults}/>
+        <section className='searched-page-body'>
+          {this.conditionalRender()}
+          <WatsonData watson={this.state.watsonResults}/>
+        </section>
       </section>
     )
   }

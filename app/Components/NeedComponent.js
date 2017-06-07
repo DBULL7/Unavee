@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { VictoryPie } from 'victory'
+import { VictoryPie, VictoryAnimation, VictoryLabel } from 'victory'
 
 class NeedComponent extends Component {
   constructor(props) {
@@ -10,7 +10,6 @@ class NeedComponent extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.percentile);
     const num = this.round(this.props.percentile)
     this.setInterval = setInterval(this.helper(num), 2000)
   }
@@ -18,7 +17,6 @@ class NeedComponent extends Component {
   round(data) {
     if (data) {
       let test = Math.round(data * 100)
-      console.log(test);
       return test
     }
   }
@@ -33,9 +31,10 @@ class NeedComponent extends Component {
     }
     return (
       <div className="needs">
-        <p>{this.props.name}</p>
+        <p className='need-title'>{this.props.name}</p>
         <VictoryPie
-          animate={{duration: 3000}}
+          className='victory-pie'
+          animate={{duration: 1000}}
           width={400} height={400}
           data={[{x: 1, y: this.state.data}, {x: 2, y: 100 - this.state.data}]}
           innerRadius={120}
@@ -49,6 +48,19 @@ class NeedComponent extends Component {
            }
           }}
         />
+        <VictoryAnimation duration={1000} data={this.state.data}>
+            {(newProps) => {
+              return (
+                <VictoryLabel
+                  className='watson-percentage'
+                  textAnchor="middle" verticalAnchor="middle"
+                  x={100} y={100}
+                  text={`${Math.round(this.props.percentile * 100)}%`}
+                  style={{ fontSize: 32 }}
+                />
+              );
+            }}
+          </VictoryAnimation>
       </div>
     )
   }

@@ -131,12 +131,42 @@ a {
 
 .watsonData {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /*justify-content: space-around;*/
+  text-align: center;
+}
+
+.watson-groups {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.needs-title {
+  display: block;
+}
+
+.needs-content {
+  display: flex;
   justify-content: space-around;
 }
 
 .needs {
-  display: flex;
-  justify-content: space-around;
+  position: relative;
+  height: 120px;
+  width: 100px;
+}
+
+.watson-percentage {
+  position: absolute;
+  top: 76%;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+.needs-title {
+  text-align: center;
 }
 
 .personality {

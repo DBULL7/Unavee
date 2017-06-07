@@ -20,9 +20,11 @@ export const WatsonData = (props) => {
     })
     return (
       <div className="watsonData">
-        <article>
-          <h3>Needs</h3>
-          {needContent}
+        <article className='watson-groups'>
+            <h3 className='needs-title'>Needs</h3>
+          <div className='needs-content'>
+            {needContent}
+          </div>
         </article>
         <article>
           <h3>Personality Analysis</h3>

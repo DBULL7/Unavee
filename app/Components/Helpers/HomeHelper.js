@@ -48,6 +48,7 @@ const fullContactAPICall = (search, setState, handleSearchResult, handleTweets) 
     scrubSearch(data, setState, search, handleSearchResult, handleTweets)
   }).catch(error => {
     console.log(error);
+    handleSearchResult({})
     setState({errorMessage: true})
   })
 }

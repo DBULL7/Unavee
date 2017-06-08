@@ -60,6 +60,7 @@ a {
   width: 100px;
   height: 30px;
   border: 0;
+  margin-left: 10px;
   background-color: #F5F5F5;
   color: #FF4136;
 }
@@ -69,7 +70,7 @@ a {
 }
 
 .watson-button {
-  width: 180px;
+  width: 228px;
 }
 
 .searched {
@@ -523,4 +524,13 @@ display: table;
 .flash-message {
   display: flex;
   justify-content: center;
+}
+
+.wide-button {
+  width: 200px;
+
+}
+
+.graph-container {
+  height: 400px;
 }

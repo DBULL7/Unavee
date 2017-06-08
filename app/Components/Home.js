@@ -78,6 +78,7 @@ class Home extends Component {
   helper() {
     checkDatabaseForSearch(this.state.input, this.setState.bind(this), this.props.handleSearchResult.bind(this), this.props.handleTweets.bind(this))
     this.clearInput()
+    this.setState({watsonResults: '', emailBody: '', subject: '', toneAnalysis: ''})
   }
 
   displayToneAnalysis() {
@@ -273,7 +274,7 @@ class Home extends Component {
             <textarea value={this.state.emailBody} onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
             <article>
               <button  className='button' onClick={() => {this.sendEmail()}}>Send Email</button>
-              <button disabled={!this.checkEmailBody()} className='button' onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
+              <button disabled={!this.checkEmailBody()} className='button wide-button' onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
               {this.displayToneAnalysis()}
             </article>
           </section>

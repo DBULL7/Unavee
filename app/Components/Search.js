@@ -16,6 +16,15 @@ class Search extends Component {
     this.props.history.replace('/Home')
   }
 
+  enterKeyPress(event) {
+    if(event.key === 'Enter' && this.checkInput()) {
+      this.helper()
+    }
+  }
+
+  checkInput() {
+    return (this.state.search !== '')
+  }
 
   render () {
     return (
@@ -24,9 +33,9 @@ class Search extends Component {
         <h1 className='home-title'>Unavee</h1>
         <div className='home-form'>
           <div className='search-bar-container'>
-            <input className='home-search-bar' value={this.state.search} onChange={(e) => {this.setState({search: e.target.value})}} placeholder="Search by email"/>
+            <input className='home-search-bar' value={this.state.search} onKeyPress={(e) => this.enterKeyPress(e)} onChange={(e) => {this.setState({search: e.target.value})}} onChange={(e) => {this.setState({search: e.target.value})}} placeholder="Search by email"/>
           </div>
-          <button id="search-button" className="button" onClick={() => this.helper()}>Search</button>
+          <button disabled={!this.checkInput()} id="search-button" className="button" onClick={() => this.helper()}>Search</button>
         </div>
       </article>
     )

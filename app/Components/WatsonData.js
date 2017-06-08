@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { VictoryPie } from 'victory'
 import NeedComponent from './NeedComponent'
+import { Graph } from './Graph'
 
 export const WatsonData = (props) => {
   if (props.watson) {
@@ -10,14 +11,14 @@ export const WatsonData = (props) => {
       <NeedComponent {...need}/>
       )
     })
-    let personalityContent = personality.map(trait => {
-      return (
-        <div className="personality">
-          <p>{trait.name}</p>
-          <p>{trait.percentile}</p>
-        </div>
-      )
-    })
+    // let personalityContent = personality.map(trait => {
+    //   return (
+    //     <div className="personality">
+    //       <p>{trait.name}</p>
+    //       <p>{trait.percentile}</p>
+    //     </div>
+    //   )
+    // })
     return (
       <div className="watsonData">
         <article className='watson-groups'>
@@ -28,7 +29,7 @@ export const WatsonData = (props) => {
         </article>
         <article className='watson-personality-analysis'>
           <h3>Personality Analysis</h3>
-          {personalityContent}
+          <Graph props={personality}/>
         </article>
       </div>
     )

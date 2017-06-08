@@ -243,6 +243,13 @@ class Home extends Component {
     }
   }
 
+  linkedInButton() {
+    const { LinkedIn } = this.props.search
+    if (LinkedIn) {
+      return <button className='button'><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
+    }
+  }
+
   conditionalRender() {
     const { name, location, organization, title, twitter, LinkedIn, picture } = this.props.search
     if (name) {
@@ -256,7 +263,7 @@ class Home extends Component {
             <h4>{organization}</h4>
             <h4>{location}</h4>
             <div className='social-media-buttons'>
-              <button className='button'><a href={`${LinkedIn}`} target="_blank">LinkedIn</a></button>
+              {this.linkedInButton()}
               {this.showTwitterWatsonButton()}
               <button disabled={!this.checkIfLoggedIn()} className='button' onClick={() => {this.save()}}>Save Search</button>
             </div>
@@ -330,8 +337,10 @@ class Home extends Component {
   navBarDisplay() {
       return (
         <article className="searched">
+          <div className='flash-message'>
             {this.displaySuccessMessage()}
             {this.displayErrorMessage()}
+          </div>
             <div className='searched-bar-container'>
               <NavLink to='/' className='global-home-link'>Unavee</NavLink>
               <input className='searched-search-bar' value={this.state.input} onKeyPress={(e) => this.enter(e)} onChange={(e) => {this.setState({input: e.target.value})}} placeholder="Search by email"/>

@@ -25,7 +25,7 @@ export const Navbar = (props) => {
   }
   return (
     <section className='nav-bar'>
-      <NavLink to='/' className='global-home-link'>Unavee</NavLink>
+      <NavLink to='/' className='home-search-link'>Unavee</NavLink>
       <nav className='nav-menu'>
         <ul className='clearfix'>
           <li><img className='menu-icon' src='../assets/menu.png'/></li>

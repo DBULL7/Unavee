@@ -26,7 +26,7 @@ export const WatsonData = (props) => {
             {needContent}
           </div>
         </article>
-        <article>
+        <article className='watson-personality-analysis'>
           <h3>Personality Analysis</h3>
           {personalityContent}
         </article>

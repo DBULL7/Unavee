@@ -34,6 +34,7 @@ const databaseSearchResult = (data, setState, handleSearchResult, handleTweets) 
 
 
 const fullContactAPICall = (search, setState, handleSearchResult, handleTweets) => {
+  console.log(search);
   fetch(`/api/v1/user?email=${search}`, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
@@ -43,8 +44,10 @@ const fullContactAPICall = (search, setState, handleSearchResult, handleTweets) 
   })
   .then(results => results.json())
   .then((data) => {
+    console.log(data);
     scrubSearch(data, setState, search, handleSearchResult, handleTweets)
   }).catch(error => {
+    console.log(error);
     setState({errorMessage: true})
   })
 }
@@ -96,15 +99,16 @@ const scrubSearch = (data, setState, search, handleSearchResult, handleTweets) =
   const organizationName = (organizations) => {
     if (organizations) {
       return organizations[0].name
+    } else {
+      return ''
     }
-    return ''
-
   }
   const location = (demographics) => {
     if(demographics) {
       return demographics.locationGeneral
+    } else {
+      return ''
     }
-    return ''
   }
   handleSearchResult({
                       name: contactInfo.fullName,
@@ -112,7 +116,7 @@ const scrubSearch = (data, setState, search, handleSearchResult, handleTweets) =
                       title: organizationTitle(organizations),
                       location: location(demographics),
                       picture: picture,
-                      LinkedIn: LinkedIn,
+                      LinkedIn: linkedin,
                       twitter: twitter,
                       twitterID: twitterID
                     })
@@ -133,7 +137,9 @@ const scrubSearch = (data, setState, search, handleSearchResult, handleTweets) =
     })
   }).then(res => res.json())
   .then(data => {
-
+    console.log(data);
+  }).catch(error => {
+    console.log(error);
   })
 }
 
@@ -149,7 +155,7 @@ const getTweets = (twitterID, setState, handleTweets) => {
       scrubTweets(data, handleTweets)
       setState({lookedUpTweets: data})
     }).catch(error => {
-
+      console.log(error);
     })
   }
 }

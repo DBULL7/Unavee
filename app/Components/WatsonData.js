@@ -1,14 +1,13 @@
 import React, {Component} from 'react'
+import { VictoryPie } from 'victory'
+import NeedComponent from './NeedComponent'
 
 export const WatsonData = (props) => {
   if (props.watson) {
     const {needs, personality} = props.watson
     let needContent = needs.map(need => {
       return (
-        <div className="needs">
-          <p>{need.name}</p>
-          <p>{need.percentile}</p>
-        </div>
+      <NeedComponent {...need}/>
       )
     })
     let personalityContent = personality.map(trait => {
@@ -21,11 +20,13 @@ export const WatsonData = (props) => {
     })
     return (
       <div className="watsonData">
-        <article>
-          <h3>Needs</h3>
-          {needContent}
+        <article className='watson-groups'>
+            <h3 className='needs-title'>Needs</h3>
+          <div className='needs-content'>
+            {needContent}
+          </div>
         </article>
-        <article>
+        <article className='watson-personality-analysis'>
           <h3>Personality Analysis</h3>
           {personalityContent}
         </article>

@@ -7,6 +7,8 @@ import NavbarContainer from './NavbarContainer'
 import FavoritesContainer from './FavoritesContainer'
 import SearchContainer from './SearchContainer'
 import SearchNavbarContainer from './SearchNavbarContainer'
+import SendEmailContainer from './SendEmailContainer'
+
 
 class App extends Component {
   render() {
@@ -43,6 +45,15 @@ class App extends Component {
               <section>
                 {/* <NavbarContainer history={this.props.history}/> */}
                 <HomeContainer history={this.props.history}/>
+              </section>
+            )
+          }}/>
+
+          <Route exact path='/Message' render={() => {
+            return (
+              <section>
+                <NavbarContainer history={this.props.history}/>
+                <SendEmailContainer history={this.props.history}/>
               </section>
             )
           }}/>

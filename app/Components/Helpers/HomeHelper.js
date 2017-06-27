@@ -10,8 +10,10 @@
 }
 
 const databaseSearchResult = (data, setState, handleSearchResult, handleTweets) => {
-  const { name, organization, title, location, picture, LinkedIn, twitter, twitterID } = data[0]
-  setState({ name: name,
+  const { search, name, organization, title, location, picture, LinkedIn, twitter, twitterID } = data[0]
+  setState({
+                  // search: search,
+                  name: name,
                   organization: organization,
                   title: title,
                   location: location,
@@ -21,7 +23,9 @@ const databaseSearchResult = (data, setState, handleSearchResult, handleTweets) 
                   twitterID: twitterID
                 })
   getTweets(twitterID, setState, handleTweets)
-  handleSearchResult({name: name,
+  handleSearchResult({
+                      search: search,
+                      name: name,
                       organization: organization,
                       title: title,
                       location: location,
@@ -112,6 +116,7 @@ const scrubSearch = (data, setState, search, handleSearchResult, handleTweets) =
     }
   }
   handleSearchResult({
+                      search: search,
                       name: contactInfo.fullName,
                       organization: organizationName(organizations),
                       title: organizationTitle(organizations),

@@ -12,7 +12,6 @@ class Home extends Component {
     this.state = {
       input: '',
       logginModal: false,
-      emailBody: '',
       saveSuccessMessage: false,
       emailSuccessMessage: false,
       errorMessage: false,
@@ -22,43 +21,6 @@ class Home extends Component {
 
   checkInput() {
     return (this.state.input !== '')
-  }
-
-  toneAnalysis() {
-    fetch('api/v1/emailAnalysis', {
-      method: 'POST',
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        text: `${this.state.emailBody}`
-      })
-    })
-    .then(results => results.json())
-    .then((data) => {
-      console.log(data);
-      this.setState({toneAnalysis: data})
-    })
-  }
-
-  sendEmail() {
-    if(this.props.loginUser.email) {
-      fetch('api/v1/sendgrid', {
-        method: 'POST',
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          email: `${this.state.search}`,
-          from: `${this.props.loginUser.email}`,
-          subject: `${this.state.subject}`,
-          content: `${this.state.emailBody}`
-        })
-      })
-      .then(results => results.json())
-      .then((data) => {
-        console.log(data);
-        this.setState({emailSuccessMessage: true, emailBody: '', subject: '', toneAnalysis: ''})
-      })
-    } else {
-      this.setState({logginModal: true, message: 'To Send An Email Sign in or Create an Account'})
-    }
   }
 
   getPersonalityProfle() {
@@ -81,45 +43,6 @@ class Home extends Component {
     this.setState({watsonResults: '', emailBody: '', subject: '', toneAnalysis: ''})
   }
 
-  displayToneAnalysis() {
-    if(this.state.toneAnalysis) {
-      const { tone_categories } = this.state.toneAnalysis.document_tone
-      let emoticon = (categoryName) => {
-        switch (categoryName) {
-          case 'Anger':
-            return '😡'
-          case 'Disgust':
-            return '🤢'
-          case 'Fear':
-            return '😱'
-          case 'Joy':
-            return '😄'
-          case 'Sadness':
-            return '😓'
-          default:
-            return '😐'
-        }
-      }
-      let emotions = tone_categories[0].tones.map(category => {
-        if (category.score > .5) {
-          return (
-            <div>
-              <p>{emoticon(category.tone_name)}</p>
-              <p>Probability: {Math.round(category.score*100)}%</p>
-            </div>
-          )
-        }
-      })
-      return (
-        <div className="tone">
-            <h4>Message Emotional Tone</h4>
-            <div className='emotions'>
-              {emotions}
-            </div>
-        </div>
-      )
-    }
-  }
 
   save() {
     if (this.props.loginUser.id) {
@@ -267,16 +190,8 @@ class Home extends Component {
               {this.linkedInButton()}
               {this.showTwitterWatsonButton()}
               <button disabled={!this.checkIfLoggedIn()} className='button' onClick={() => {this.save()}}>Save Search</button>
+              <button className='button' onClick={() => {this.gotoSendEmail()}}>Send Email</button>
             </div>
-          </section>
-          <section className="email">
-            <input value={this.state.subject} onChange={(e) => {this.setState({subject: e.target.value})}} name="subject" placeholder="Subject"/>
-            <textarea value={this.state.emailBody} onChange={(e) => {this.setState({emailBody: e.target.value})}} name="email-body" placeholder={`Send ${this.state.name} a quick email`}/>
-            <article>
-              <button  className='button' onClick={() => {this.sendEmail()}}>Send Email</button>
-              <button disabled={!this.checkEmailBody()} className='button wide-button' onClick={() => {this.toneAnalysis()}}>Run Sentiment Analysis</button>
-              {this.displayToneAnalysis()}
-            </article>
           </section>
         </section>
       )
@@ -285,6 +200,10 @@ class Home extends Component {
         <div></div>
       )
     }
+  }
+
+  gotoSendEmail() {
+    this.props.history.replace('/Message')
   }
 
   clearInput() {

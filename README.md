@@ -1,10 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/DBULL7/Unavee.png?label=ready&title=Ready)](https://waffle.io/DBULL7/Unavee?utm_source=badge)
-## Miniature Express Back End
 
-### For use with Module 3 FE Personal Projects
+### This Project Requires: a Sendgrid API key, a Full-Contact API key, a Twitter API key, and Watson Personality Insight and Tone Analyzer API keys.
 
-### Installation
-
-1. Clone down this repo
-2. Run `npm install`
-3. Push to a different remote location on your own github account
+Once security issues are resolved this project will be hosted. 

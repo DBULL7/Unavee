@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const cors = require('express-cors');
 const bodyParser = require('body-parser')
+let bcrypt = require('bcrypt')
 const port = (process.env.PORT || 3000);
 const app = express();
 const router = require('./router');
@@ -37,6 +38,7 @@ app.use('/api/v1', router);
 app.post('/api/v1/users/new', (request, response) => {
   console.log(request.body);
   const user = request.body
+  user.password = bcrypt.hashSync(request.body.password, 10);
   database('users').insert(user, 'id')
   .then(user => {
     response.status(201).json({id: user[0]})
@@ -48,12 +50,16 @@ app.post('/api/v1/users/new', (request, response) => {
 })
 
 app.post('/api/v1/signin', (req, res) => {
-  database('users').where('email', req.body.email).andWhere('password', req.body.password).select()
+  database('users').where('email', req.body.email).select()
     .then(user => {
       if (user[0]) {
-        res.status(200).json(user)
+        if (bcrypt.compareSync(req.body.password, user[0].password))  {
+          res.status(200).json(user)
+        } else {
+          res.json({ message: 'Password Email does not match' })
+        }
       } else {
-        res.json({message: 'Password or Email does not match'})
+        res.json({ message: 'User not found' })
       }
     })
     .catch(error => {

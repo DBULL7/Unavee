@@ -13,11 +13,7 @@ exports.up = function(knex, Promise) {
       table.string('twitter')
       table.string('twitterID')
 
-      table.timestamps()
-    }),
-
-    knex.schema.table('users', function(table) {
-      table.string('email').unique()
+      table.timestamps(true, true)
     })
   ])
 };
@@ -25,8 +21,5 @@ exports.up = function(knex, Promise) {
 exports.down = function(knex, Promise) {
   return Promise.all([
     knex.schema.dropTable('searches'),
-    knex.schema.table('users', function(table) {
-      table.dropColumn('email')
-    })
   ])
 };

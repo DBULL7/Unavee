@@ -1,8 +1,13 @@
-const token = require('./twitterKey.js')
+// const token = require('./twitterKey.js')
+const token = NODE.ENV.twitter
+const watsonKeys = NODE.ENV.watson
+const toneAnalyzerKeys = NODE.ENV.tone 
+const sendgridKey = NODE.ENV.sendgrid 
+const fullcontact = NODE.ENV.fullcontact
 const request = require('request')
-const watsonKeys = require('./watsonKeys.js')
-const toneAnalyzerKeys = require('./toneAnalyzerKeys.js')
-const sendgridKey = require('./sendgridAPIKey.js')
+// const watsonKeys = require('./watsonKeys.js')
+// const toneAnalyzerKeys = require('./toneAnalyzerKeys.js')
+// const sendgridKey = require('./sendgridAPIKey.js')
 var PersonalityInsightsV3 = require('watson-developer-cloud/personality-insights/v3')
 var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
 
@@ -11,7 +16,7 @@ function email(req, res, next) {
   console.log(req.body);
   request({
     url: `https://api.fullcontact.com/v2/person.json?email=${req.body.email}`,
-    headers: {"X-FullContact-APIKey":"7bf3d484dff1e414"}
+    headers: {"X-FullContact-APIKey": fullcontact}
   },
     function (error, response, body) {
 

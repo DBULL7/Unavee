@@ -2,4 +2,4 @@
 
 ### This Project Requires: a Sendgrid API key, a Full-Contact API key, a Twitter API key, and Watson Personality Insight and Tone Analyzer API keys.
 
-Once security issues are resolved this project will be hosted. 
+

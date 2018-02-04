@@ -1,9 +1,9 @@
 // const token = require('./twitterKey.js')
-const token = NODE.ENV.twitter
-const watsonKeys = NODE.ENV.watson
-const toneAnalyzerKeys = NODE.ENV.tone 
-const sendgridKey = NODE.ENV.sendgrid 
-const fullcontact = NODE.ENV.fullcontact
+const token = {token: process.env.twitter}
+const watsonKeys = {username: process.env.watsonUsername, password: process.env.watsonPassword}
+const toneAnalyzerKeys = {username: process.env.toneUsername, password: process.env.tonePassword} 
+const sendgridKey = {apiKey: process.env.sendgrid}
+const fullcontact = process.env.fullcontact
 const request = require('request')
 // const watsonKeys = require('./watsonKeys.js')
 // const toneAnalyzerKeys = require('./toneAnalyzerKeys.js')
